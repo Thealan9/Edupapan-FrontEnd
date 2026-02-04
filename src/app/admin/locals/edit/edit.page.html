@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Editar local</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-spinner
+    *ngIf="loading"
+    class="ion-padding"
+    name="crescent">
+  </ion-spinner>
+
+  <form [formGroup]="form" *ngIf="!loading && !error">
+    <ion-item>
+      <ion-label position="stacked">Nombre</ion-label>
+      <ion-input formControlName="name"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Address</ion-label>
+      <ion-input formControlName="address"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Usuario</ion-label>
+      <ion-text></ion-text>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Activo</ion-label>
+      <ion-toggle formControlName="active"></ion-toggle>
+    </ion-item>
+
+    <ion-button expand="block" (click)="save()">
+      Guardar cambios
+    </ion-button>
+  </form>
+
+  <div *ngIf="!loading && error" class="ion-padding">
+    <ion-text color="medium">
+      Error al cargar el local a editar
+    </ion-text>
+  </div>
+
+</ion-content>

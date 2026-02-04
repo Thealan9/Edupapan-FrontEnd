@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Editar servicio</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-spinner
+    *ngIf="loading"
+    class="ion-padding"
+    name="crescent">
+  </ion-spinner>
+
+  <form [formGroup]="form" *ngIf="!loading && !error">
+
+    <ion-item>
+      <ion-input formControlName="name" placeholder="Nombre"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-textarea formControlName="description" placeholder="Descripción"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-input type="number" formControlName="base_price"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Activo</ion-label>
+      <ion-toggle formControlName="active"></ion-toggle>
+    </ion-item>
+
+    <ion-button expand="full" (click)="save()">Guardar</ion-button>
+  </form>
+
+  <div *ngIf="!loading && error" class="ion-padding">
+    <ion-text color="medium">
+      Error al cargar el servicio a editar
+    </ion-text>
+  </div>
+</ion-content>

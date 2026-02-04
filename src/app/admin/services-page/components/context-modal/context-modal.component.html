@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{ isEdit ? 'Editar contexto' : 'Nuevo contexto' }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <form [formGroup]="form">
+
+    <!-- CONTEXTO -->
+    <ion-item>
+      <ion-label>Tipo</ion-label>
+      <ion-select formControlName="context">
+        <ion-select-option value="public">Público</ion-select-option>
+        <ion-select-option value="local">Local</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- LOCAL -->
+    <ion-item *ngIf="form.value.context === 'local'">
+      <ion-label position="stacked">Local</ion-label>
+      <ion-input type="number" formControlName="local_id"></ion-input>
+    </ion-item>
+
+    <!-- PRECIO -->
+    <ion-item>
+      <ion-label position="stacked">Precio personalizado</ion-label>
+      <ion-input type="number" formControlName="price_override"></ion-input>
+    </ion-item>
+
+    <!-- ACTIVO -->
+    <ion-item>
+      <ion-label>Activo</ion-label>
+      <ion-toggle formControlName="active"></ion-toggle>
+    </ion-item>
+
+    <ion-button
+      expand="block"
+      class="ion-margin-top"
+      (click)="submit()"
+    >
+      {{ isEdit ? 'Guardar cambios' : 'Crear contexto' }}
+    </ion-button>
+
+  </form>
+
+</ion-content>

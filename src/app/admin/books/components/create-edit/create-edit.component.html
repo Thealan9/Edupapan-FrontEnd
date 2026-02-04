@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{ isEdit ? 'Editar libro' : 'Nuevo libro' }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="form">
+    <!-- AUTOR
+    <ion-item>
+      <ion-label position="stacked">Autor</ion-label>
+      <ion-input type="text" formControlName="author"></ion-input>
+    </ion-item> -->
+
+    <!-- TÍTULO -->
+    <ion-item>
+      <ion-label position="stacked">Título</ion-label>
+      <ion-input type="text" formControlName="title"></ion-input>
+    </ion-item>
+    <!-- ISBN -->
+    <ion-item>
+      <ion-label position="stacked">ISBN</ion-label>
+      <ion-input type="text" formControlName="isbn"></ion-input>
+    </ion-item>
+    <!-- NIVEL -->
+    <ion-item>
+      <ion-label position="stacked">Nivel</ion-label>
+      <ion-select formControlName="level">
+        <ion-select-option value="A1">A1</ion-select-option>
+        <ion-select-option value="A2">A2</ion-select-option>
+        <ion-select-option value="B1">B1</ion-select-option>
+        <ion-select-option value="B2">B2</ion-select-option>
+        <ion-select-option value="C1">C1</ion-select-option>
+        <ion-select-option value="C2">C2</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <!-- PRECIO -->
+    <ion-item>
+      <ion-label position="stacked">Precio</ion-label>
+      <ion-input type="number" formControlName="price"></ion-input>
+    </ion-item>
+    <!-- PROVEEDOR -->
+    <ion-item>
+      <ion-label position="stacked">Proveedor</ion-label>
+      <ion-input type="text" formControlName="supplier"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="submit()">
+      Guardar
+    </ion-button>
+  </form>
+</ion-content>

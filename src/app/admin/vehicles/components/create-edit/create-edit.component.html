@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{ isEdit ? 'Editar vehículo' : 'Nuevo vehículo' }}
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="form">
+
+    <!-- MODELO -->
+    <ion-item>
+      <ion-label position="stacked">Modelo</ion-label>
+      <ion-input type="text" formControlName="model"></ion-input>
+    </ion-item>
+    <!-- PLACA -->
+    <ion-item>
+      <ion-label position="stacked">Placa</ion-label>
+      <ion-input type="text" formControlName="plate"></ion-input>
+    </ion-item>
+    <!-- ACTIVO -->
+    <ion-item>
+      <ion-label>Activo</ion-label>
+      <ion-toggle formControlName="is_active"></ion-toggle>
+    </ion-item>
+    <!-- DISPONIBLE -->
+    <!-- <ion-item *ngIf="form.get('is_active')?.value"> -->
+    <ion-item>
+      <ion-label>Disponible</ion-label>
+      <ion-toggle formControlName="is_available"></ion-toggle>
+    </ion-item>
+    <!-- Conductor-->
+    <ion-item>
+      <ion-label position="stacked">Conductor</ion-label>
+      <ion-input type="text" formControlName="driver_id"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="submit()">
+      Guardar
+    </ion-button>
+  </form>
+</ion-content>

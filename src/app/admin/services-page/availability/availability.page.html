@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Disponibilidad del servicio</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openRange()">
+        <ion-icon name="add"></ion-icon>
+        Agregar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+ <ion-list>
+  <ion-item *ngFor="let a of availabilities">
+    <ion-label>
+      <h2>{{ a.date }}</h2>
+      <p>{{ a.start_time }} - {{ a.end_time }}</p>
+    </ion-label>
+
+    <ion-toggle
+      slot="end"
+      [checked]="a.available"
+      (ionChange)="toggle(a)">
+    </ion-toggle>
+
+    <ion-button
+      fill="clear"
+      slot="end"
+      (click)="edit(a)">
+      Editar
+    </ion-button>
+
+    <!-- <ion-button
+      fill="clear"
+      color="danger"
+      slot="end"
+      (click)="remove(a)">
+      Eliminar
+    </ion-button> -->
+  </ion-item>
+</ion-list>
+
+<ion-fab vertical="bottom" horizontal="end">
+  <ion-fab-button (click)="openCreate()">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+</ion-content>

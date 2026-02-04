@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Libros</ion-title>
+  </ion-toolbar>
+  <ion-button (click)="openCreate()">Añadir</ion-button>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="!loading">
+    <ion-item *ngFor="let b of books">
+      <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col size="12" size-md="3">
+            <h2 style="font-weight: lighter; text-transform: uppercase; margin: 0;">
+              {{ b.title }}
+            </h2>
+          </ion-col>
+
+          <ion-col size="12" size-md="6">
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; font-size: 0.9em;font-weight: lighter;">
+              <p style="margin: 0;"><strong>ISBN:</strong> {{ b.isbn }}</p>
+              <p style="margin: 0;"><strong>Nivel:</strong> {{ b.level }}</p>
+              <p style="margin: 0;"><strong>Precio:</strong> {{ b.price | currency }}</p>
+              <p style="margin: 0;"><strong>Proveedor:</strong> {{ b.supplier }}</p>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" size-md="3" class="ion-text-end">
+            <ion-button fill="outline" (click)="openEdit(b)">
+              <ion-icon slot="start" name="create-outline"></ion-icon>
+              Editar
+            </ion-button>
+            <ion-button fill="outline" color="danger" (click)="delete(b.id)">
+              <ion-icon slot="start" name="trash-outline"></ion-icon>
+              Eliminar
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+
+  <ion-spinner *ngIf="loading"></ion-spinner>
+</ion-content>

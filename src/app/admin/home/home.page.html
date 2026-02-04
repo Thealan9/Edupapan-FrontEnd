@@ -1,0 +1,57 @@
+<ion-content>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+
+      <ion-title>Mi Aplicación</ion-title>
+      <ion-buttons slot="end">
+        <ion-button routerLink="/admin/users" routerDirection="forward">
+          Usuarios
+        </ion-button>
+        <ion-button routerLink="/admin/vehicles" routerDirection="forward">
+          Vehículos
+        </ion-button>
+        <ion-button routerLink="/admin/books" routerDirection="forward">
+          Libros
+        </ion-button>
+      </ion-buttons>
+
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-icon slot="icon-only" name="person-circle"></ion-icon>
+        </ion-button>
+        <ion-button>
+          <ion-icon slot="icon-only" name="search"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-grid *ngIf="stats">
+    <ion-row>
+      <ion-col size="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Usuarios</ion-card-title>
+          </ion-card-header>
+          <ion-card-content> {{ stats.users }} </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Ingresos</ion-card-title>
+          </ion-card-header>
+          <ion-card-content> ${{ stats.income_month }} </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-list>
+    <ion-item *ngFor="let item of activity"> {{ item.message }} </ion-item>
+  </ion-list>
+  <ion-button (click)="logout()">Salir</ion-button>
+</ion-content>

@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Usuarios</ion-title>
+     <ion-buttons slot="end">
+      <ion-button routerLink="/admin/users/create">
+        <ion-icon name="add-outline"></ion-icon>
+        Nuevo
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-spinner *ngIf="loading" class="ion-padding"></ion-spinner>
+
+  <ion-list *ngIf="!loading">
+    <ion-item *ngFor="let user of users">
+  <ion-label>
+    <h2>{{ user.name }}</h2>
+    <p>{{ user.email }}</p>
+  </ion-label>
+
+  <ion-button
+    slot="end"
+    size="small"
+    [disabled]="!canEdit(user)"
+    [routerLink]="['/admin/users/edit', user.id]">
+    Editar
+  </ion-button>
+  <ion-button
+    color="warning"
+    (click)="toggleActive(user)"
+    [disabled]="!canEdit(user)">
+    {{ user.active ? 'Bloquear' : 'Activar' }}
+  </ion-button>
+
+   <ion-button
+    color="danger"
+    (click)="delete(user)"
+    [disabled]="!canEdit(user)">
+    Eliminar
+  </ion-button>
+
+</ion-item>
+  </ion-list>
+
+</ion-content>

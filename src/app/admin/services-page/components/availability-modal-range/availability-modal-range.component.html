@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Disponibilidad por rango</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="form">
+
+    <!-- RANGO DE FECHAS -->
+    <ion-item>
+      <ion-label position="stacked">Fecha inicio</ion-label>
+      <ion-input type="date" formControlName="start_date"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Fecha fin</ion-label>
+      <ion-input type="date" formControlName="end_date"></ion-input>
+    </ion-item>
+
+    <!-- HORAS -->
+    <ion-item>
+      <ion-label position="stacked">Hora inicio</ion-label>
+      <ion-input type="time" formControlName="start_time"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Hora fin</ion-label>
+      <ion-input type="time" formControlName="end_time"></ion-input>
+    </ion-item>
+
+    <!-- DÍAS DE LA SEMANA -->
+    <ion-list>
+      <ion-list-header>Días disponibles</ion-list-header>
+
+      <ion-item *ngFor="let d of days">
+        <ion-checkbox slot="start" [formControlName]="d.key"></ion-checkbox>
+        <ion-label>{{ d.label }}</ion-label>
+      </ion-item>
+    </ion-list>
+
+    <!-- BOTÓN -->
+    <ion-button
+      expand="block"
+      color="primary"
+      (click)="submitRange()"
+      [disabled]="form.invalid"
+    >
+      Crear disponibilidad
+    </ion-button>
+
+  </form>
+</ion-content>
