@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/auth';
 import { AdminDashboard } from '../services/admin-dashboard';
 import { AdminDashboardResponse } from 'src/app/interfaces/admin/admin-dashboard.interface';
+import { CreateComponent } from './components/create/create.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +19,8 @@ export class HomePage  {
   constructor(
     private auth: Auth,
     private router: Router,
-    private dashboard: AdminDashboard
+    private dashboard: AdminDashboard,
+    private modalCtrl: ModalController,
   ) {}
 
   logout() {
@@ -33,11 +36,17 @@ export class HomePage  {
     });
   }
   ionViewWillEnter() {
-    this.dashboard.getDashboard().subscribe(res => {
-      this.stats = res['stats'];
-      this.activity = res['recent_activity'];
 
-    });
   }
+  async openCreate() {
+      const modal = await this.modalCtrl.create({
+        component: CreateComponent,
+      });
+
+      modal.onDidDismiss().then((res) => {
+      });
+
+      await modal.present();
+    }
 
 }

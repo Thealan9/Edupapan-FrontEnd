@@ -70,6 +70,23 @@ const routes: Routes = [
     loadChildren: () => import('./admin/books/books.module').then( m => m.BooksPageModule)
   },
 
+  //warehouseman
+
+  {
+    path: 'warehouseman',
+    canMatch: [AuthGuard,RoleGuard],
+    data: { roles: ['warehouseman'] },
+    loadChildren: () => import('./warehouseman/warehouseman.module').then( m => m.WarehousemanPageModule)
+  },
+
+  //driver
+  {
+    path: 'driver',
+    canMatch: [AuthGuard,RoleGuard],
+    data: { roles: ['driver'] },
+    loadChildren: () => import('./driver/driver.module').then( m => m.DriverPageModule)
+  },
+
 
 
 
@@ -84,6 +101,7 @@ const routes: Routes = [
     },
     loadChildren: () => import('./user/profile/profile.module').then( m => m.ProfilePageModule)
   },
+
 
 
 

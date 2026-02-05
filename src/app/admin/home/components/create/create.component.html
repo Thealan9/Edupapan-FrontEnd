@@ -1,0 +1,92 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Crear ticket
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="form">
+<ion-item>
+      <ion-label position="stacked">Tipo de Operación</ion-label>
+      <ion-select formControlName="type" placeholder="Seleccione tipo">
+        <ion-select-option value="entry">Entrada (Entry)</ion-select-option>
+        <ion-select-option value="sale">Venta (Sale)</ion-select-option>
+        <ion-select-option value="removed">Retiro (Removed)</ion-select-option>
+        <ion-select-option value="change">Cambio (Change)</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <div *ngIf="form.get('type')?.value">
+      <ion-item>
+        <ion-label position="stacked">Asignado a (User ID)</ion-label>
+        <ion-input type="number" formControlName="assigned_to"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Libro (Book ID)</ion-label>
+        <ion-input type="number" formControlName="book_id"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Cantidad Total</ion-label>
+        <ion-input type="number" formControlName="quantity"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Descripción</ion-label>
+        <ion-textarea formControlName="description"></ion-textarea>
+      </ion-item>
+
+      <h3 style="margin-top: 20px;">Paquetes</h3>
+      <div formArrayName="packages">
+        <ion-card *ngFor="let pkg of packages.controls; let i = index" [formGroupName]="i">
+          <ion-card-header>
+            <ion-card-subtitle>Paquete #{{ i + 1 }}</ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ng-container *ngIf="form.get('type')?.value === 'entry'">
+              <ion-item>
+                <ion-label position="stacked">Número de Lote</ion-label>
+                <ion-input formControlName="batch_number"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Cantidad de Libros</ion-label>
+                <ion-input type="number" formControlName="book_quantity"></ion-input>
+              </ion-item>
+            </ng-container>
+
+            <ng-container *ngIf="form.get('type')?.value !== 'entry'">
+              <ion-item>
+                <ion-label position="stacked">ID del Paquete</ion-label>
+                <ion-input type="number" formControlName="package_id"></ion-input>
+              </ion-item>
+            </ng-container>
+
+            <ion-item *ngIf="form.get('type')?.value === 'entry' || form.get('type')?.value === 'change'">
+              <ion-label position="stacked">Mover a Pallet (ID)</ion-label>
+              <ion-input type="number" formControlName="moved_to_pallet"></ion-input>
+            </ion-item>
+
+            <ion-button color="danger" fill="clear" (click)="removePackage(i)" *ngIf="packages.length > 1">
+              Eliminar Paquete
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <ion-button fill="outline" expand="block" (click)="addPackage()">
+        + Añadir Paquete
+      </ion-button>
+
+      <ion-button expand="block" (click)="submit()" [disabled]="form.invalid" class="ion-margin-top">
+        Procesar {{ form.get('type')?.value | uppercase }}
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

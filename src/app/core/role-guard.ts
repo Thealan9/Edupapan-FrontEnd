@@ -24,9 +24,22 @@ export class RoleGuard implements CanMatch {
         }
 
         if (!allowedRoles?.includes(user.role)) {
-          return this.router.createUrlTree(
-            user.role === 'admin' ? ['/admin'] : ['/home']
-          );
+          // return this.router.createUrlTree(
+            // user.role === 'admin' ? ['/admin'] : ['/home']
+            if(user.role === 'admin'){
+              return this.router.createUrlTree(['/admin']);
+            } else if(user.role === 'user'){
+              return this.router.createUrlTree(['/home']);
+            } else if(user.role === 'warehouseman'){
+              return this.router.createUrlTree(['/warehouseman']);
+            } else if(user.role === 'driver'){
+              return this.router.createUrlTree(['/driver']);
+            }
+            // else {
+             // return this.router.createUrlTree(['/login']);
+            //}
+
+          //);
         }
 
         return true;
