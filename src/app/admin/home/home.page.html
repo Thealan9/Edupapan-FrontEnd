@@ -16,13 +16,13 @@
         <ion-button routerLink="/admin/books" routerDirection="forward">
           Libros
         </ion-button>
-        <ion-button (click)="openCreate()">
-          Abrir Ticket
-        </ion-button>
+        <ion-button (click)="openCreate()"> Abrir Ticket </ion-button>
+
+        <ion-button (click)="logout()"> Salir </ion-button>
       </ion-buttons>
 
       <ion-buttons slot="end">
-        <ion-button>
+        <ion-button routerLink="/profile" routerDirection="forward">
           <ion-icon slot="icon-only" name="person-circle"></ion-icon>
         </ion-button>
         <ion-button>
@@ -31,5 +31,4 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-button (click)="logout()">Salir</ion-button>
 </ion-content>

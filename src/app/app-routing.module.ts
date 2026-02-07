@@ -76,15 +76,40 @@ const routes: Routes = [
     path: 'warehouseman',
     canMatch: [AuthGuard,RoleGuard],
     data: { roles: ['warehouseman'] },
-    loadChildren: () => import('./warehouseman/warehouseman.module').then( m => m.WarehousemanPageModule)
+    loadChildren: () => import('./warehouseman/home/home.module').then( m => m.HomePageModule)
   },
+  {
+    path: 'warehouseman/ticket/entry/:id',
+    canMatch: [AuthGuard,RoleGuard],
+    data: { roles: ['warehouseman'] },
+    loadChildren: () => import('./warehouseman/ticket/entry/entry.module').then( m => m.EntryPageModule)
+  },
+  {
+    path: 'warehouseman/ticket/sale/:id',
+    canMatch: [AuthGuard,RoleGuard],
+    data: { roles: ['warehouseman'] },
+    loadChildren: () => import('./warehouseman/ticket/sale/sale.module').then( m => m.SalePageModule)
+  },
+  {
+    path: 'warehouseman/ticket/change/:id',
+    canMatch: [AuthGuard,RoleGuard],
+    data: { roles: ['warehouseman'] },
+    loadChildren: () => import('./warehouseman/ticket/change/change.module').then( m => m.ChangePageModule)
+  },
+  {
+    path: 'warehouseman/ticket/removed/:id',
+    canMatch: [AuthGuard,RoleGuard],
+    data: { roles: ['warehouseman'] },
+    loadChildren: () => import('./warehouseman/ticket/removed/removed.module').then( m => m.RemovedPageModule)
+  },
+
 
   //driver
   {
     path: 'driver',
     canMatch: [AuthGuard,RoleGuard],
     data: { roles: ['driver'] },
-    loadChildren: () => import('./driver/driver.module').then( m => m.DriverPageModule)
+    loadChildren: () => import('./driver/home/home.module').then( m => m.HomePageModule)
   },
 
 
@@ -101,7 +126,6 @@ const routes: Routes = [
     },
     loadChildren: () => import('./user/profile/profile.module').then( m => m.ProfilePageModule)
   },
-
 
 
 

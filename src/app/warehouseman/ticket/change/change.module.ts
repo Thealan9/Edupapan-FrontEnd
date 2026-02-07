@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { DriverPageRoutingModule } from './driver-routing.module';
+import { ChangePageRoutingModule } from './change-routing.module';
 
-import { DriverPage } from './driver.page';
+import { ChangePage } from './change.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DriverPageRoutingModule
+    ChangePageRoutingModule
   ],
-  declarations: [DriverPage]
+  declarations: [ChangePage]
 })
-export class DriverPageModule {}
+export class ChangePageModule {}

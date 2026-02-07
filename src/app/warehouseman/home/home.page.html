@@ -1,0 +1,64 @@
+<ion-content>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+
+      <ion-title>Almacén</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="logout()">Salir</ion-button>
+      </ion-buttons>
+
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-icon slot="icon-only" name="search"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-list *ngIf="!loading">
+    <ion-item *ngFor="let t of tickets">
+      <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col size="12" size-md="6">
+            <div
+              style="
+                display: flex;
+                gap: 15px;
+                flex-wrap: wrap;
+                font-size: 0.9em;
+                font-weight: lighter;
+              "
+            >
+              <p style="margin: 0">
+                <strong>Tipo de ticket:</strong> {{ t.type }}
+              </p>
+              <p style="margin: 0"><strong>Status:</strong> {{ t.status }}</p>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" size-md="3" class="ion-text-end">
+            <ion-button
+              *ngIf="t.status == 'pending'"
+              (click)="acceptTicket(t.id)"
+              fill="outline"
+              color="success"
+              >Aceptar</ion-button
+            >
+            <ion-button
+              *ngIf="t.status != 'pending' && t.status != 'pending_partially_completed'"
+              [routerLink]="['/warehouseman/ticket/',t.type, t.id]"
+              fill="outline"
+              color="primary"
+            >Ver Detalles
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+
+  <ion-spinner *ngIf="loading"></ion-spinner>
+</ion-content>

@@ -1,0 +1,65 @@
+<ion-content [fullscreen]="true">
+  <div *ngIf="!loading && !error">
+    <ion-list-header>
+      <ion-label>PAQUETES</ion-label>
+    </ion-list-header>
+
+    <ion-list lines="expensive">
+      <ion-item-sliding *ngFor="let item of ticketInfo.details">
+        <ion-item>
+          <ion-label>
+            <h2>Paquete: <strong>{{ item.package.batch_number }}</strong></h2>
+            <p>Pallet Destino: {{ item.pallet.pallet_code }}</p>
+            <p>Estado Item: <ion-badge>{{ item.status }}</ion-badge></p>
+          </ion-label>
+
+          <ion-button
+            slot="end"
+            fill="clear"
+            id="open-action-sheet{{item.id}}"
+            *ngIf="ticketInfo.status == 'in_progress' && item.status == 'pending'"
+            (click)="opendetailPackageStatus(item.id)"
+          >
+            <ion-icon slot="icon-only" name="menu"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-item-sliding>
+    </ion-list>
+
+    <ion-button
+      *ngIf="ticketInfo.status == 'approve_partially' || ticketInfo.status == 'refused_partially'"
+      (click)="confirmPartial()"
+      >Completar Parcial</ion-button
+    >
+    <ion-button *ngIf="ticketInfo.status == 'in_progress'" (click)="confirm()"
+      >Completar</ion-button
+    >
+  </div>
+
+  <ion-action-sheet
+    [isOpen]="isDeatilPackageStatus"
+    header="Actions"
+    [buttons]="actionSheetButtons"
+    (didDismiss)="isDeatilPackageStatus = false"
+  ></ion-action-sheet>
+  <ion-alert
+  [isOpen]="addDescriptionPackageStatus"
+  [header]="addDescriptionHeader"
+  [subHeader]="addDescriptionSubheader"
+  [inputs]="alertInputs"
+  [buttons]="actionAddDescriptionPackageStatusButtons"
+  (didDismiss)="addDescriptionPackageStatus = false"
+></ion-alert>
+
+  <ion-alert
+    [isOpen]="isAlertOpen"
+    [header]="alertHeader"
+    [message]="alertMessage"
+    [buttons]="alertButtons"
+    (didDismiss)="isAlertOpen = false"
+  ></ion-alert>
+  <div *ngIf="!loading && error" class="ion-padding">
+    <ion-text color="medium"> Error al cargar el usuario a editar </ion-text>
+  </div>
+  <ion-spinner *ngIf="loading"></ion-spinner>
+</ion-content>
