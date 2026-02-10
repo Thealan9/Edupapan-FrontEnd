@@ -85,7 +85,7 @@ export class EntryPage implements OnInit {
   }
 
   setupPartialAlert(data: any) {
-    this.alertHeader = 'Entrada Incompleta';
+    this.alertHeader = 'Ticket incompleto';
     this.alertMessage = data.message;
 
     this.alertButtons = [
@@ -95,7 +95,7 @@ export class EntryPage implements OnInit {
         handler: () => { this.isAlertOpen = false; }
       },
       {
-        text: 'Confirmar Parcial',
+        text: 'Solicitar',
         handler: () => {
           this.sendPartialRequest();
         }
@@ -218,9 +218,5 @@ export class EntryPage implements OnInit {
     ]
   }
 }
-
-
-
-
 
 }

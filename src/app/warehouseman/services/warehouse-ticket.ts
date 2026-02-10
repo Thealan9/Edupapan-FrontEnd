@@ -68,7 +68,9 @@ export class WarehouseTicket {
   }
 
   autocompleteTicket(id: number) {
-    return this.http.post<any>(`${this.API}/warehouseman/ticket/${id}/autocomplete-sale`,{});
+    return this.http.post<any>(`${this.API}/warehouseman/ticket/${id}/autocomplete-sale`,{}).pipe(
+      tap( ()=> this.triggerRefresh())
+    );
   }
 
   triggerRefresh(){
