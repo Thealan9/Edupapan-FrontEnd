@@ -1,8 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>
-      Crear ticket
-    </ion-title>
+    <ion-title> Crear ticket </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="close()">Cerrar</ion-button>
     </ion-buttons>
@@ -10,8 +8,8 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form [formGroup]="form">
-<ion-item>
+  <form [formGroup]="form" *ngIf="!loading">
+    <ion-item>
       <ion-label position="stacked">Tipo de Operación</ion-label>
       <ion-select formControlName="type" placeholder="Seleccione tipo">
         <ion-select-option value="entry">Entrada</ion-select-option>
@@ -23,17 +21,28 @@
 
     <div *ngIf="form.get('type')?.value">
       <ion-item>
-        <ion-label position="stacked">Asignado a (User ID)</ion-label>
-        <ion-input type="number" formControlName="assigned_to"></ion-input>
+        <ion-label position="stacked">Asignado a</ion-label>
+        <ion-select
+          formControlName="assigned_to"
+          placeholder="Seleccionar trabajador"
+        >
+          <ion-select-option *ngFor="let w of workers" [value]="w.id">{{
+            w.name
+          }}</ion-select-option>
+        </ion-select>
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Libro (Book ID)</ion-label>
-        <ion-input type="number" formControlName="book_id"></ion-input>
+        <ion-label position="stacked">Libro</ion-label>
+        <ion-select formControlName="book_id">
+          <ion-select-option *ngFor="let b of books" [value]="b.id">
+            {{ b.title }}
+          </ion-select-option>
+        </ion-select>
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Cantidad Total</ion-label>
+        <ion-label position="stacked">Cantidad Total de Paquetes</ion-label>
         <ion-input type="number" formControlName="quantity"></ion-input>
       </ion-item>
 
@@ -42,13 +51,11 @@
         <ion-textarea formControlName="description"></ion-textarea>
       </ion-item>
 
-      <h3 style="margin-top: 20px;">Paquetes</h3>
       <div formArrayName="packages">
-        <ion-card *ngFor="let pkg of packages.controls; let i = index" [formGroupName]="i">
-          <ion-card-header>
-            <ion-card-subtitle>Paquete #{{ i + 1 }}</ion-card-subtitle>
-          </ion-card-header>
-
+        <ion-card
+          *ngFor="let pkg of packages.controls; let i = index"
+          [formGroupName]="i"
+        >
           <ion-card-content>
             <ng-container *ngIf="form.get('type')?.value === 'entry'">
               <ion-item>
@@ -57,36 +64,104 @@
               </ion-item>
               <ion-item>
                 <ion-label position="stacked">Cantidad de Libros</ion-label>
-                <ion-input type="number" formControlName="book_quantity"></ion-input>
+                <ion-input
+                  type="number"
+                  formControlName="book_quantity"
+                ></ion-input>
               </ion-item>
             </ng-container>
 
             <ng-container *ngIf="form.get('type')?.value !== 'entry'">
               <ion-item>
-                <ion-label position="stacked">ID del Paquete</ion-label>
-                <ion-input type="number" formControlName="package_id"></ion-input>
+                <ion-label position="stacked"
+                  >Seleccionar Paquete (Lote)</ion-label
+                >
+
+                <ion-select
+                  formControlName="package_id"
+                  [disabled]="form.get('book_id')?.value === 0"
+                  [placeholder]="
+                    form.get('book_id')?.value === 0
+                      ? 'Seleccione un libro primero'
+                      : 'Seleccione paquete'
+                  "
+                  (ionChange)="pkg.get('moved_to_pallet')?.setValue('')"
+                >
+                  <ion-select-option
+                    *ngIf="getFilteredPackages().length === 0"
+                    [disabled]="true"
+                  >
+                    No hay paquetes disponibles para este libro
+                  </ion-select-option>
+
+                  <ion-select-option
+                    *ngFor="let p of getFilteredPackages()"
+                    [value]="p.id"
+                    [disabled]="
+                      isPackageDisabled(p.id, pkg.get('package_id')?.value)
+                    "
+                  >
+                    {{ p.batch_number }}
+                  </ion-select-option>
+                </ion-select>
               </ion-item>
             </ng-container>
 
-            <ion-item *ngIf="form.get('type')?.value === 'entry' || form.get('type')?.value === 'change'">
-              <ion-label position="stacked">Mover a Pallet (ID)</ion-label>
-              <ion-input type="number" formControlName="moved_to_pallet"></ion-input>
-            </ion-item>
+            <ion-item
+              *ngIf="
+                form.get('type')?.value === 'entry' ||
+                (form.get('type')?.value === 'change' &&
+                  pkg.get('package_id')?.value)
+              "
+            >
+              <ion-label position="stacked">Mover a Pallet</ion-label>
+              <ion-select formControlName="moved_to_pallet">
+                <ion-select-option
+                  *ngFor="let pallet of pallets"
+                  [value]="pallet.id"
+                  [disabled]="
+                    isPalletDisabled(
+                      pallet.id,
+                      pkg.get('moved_to_pallet')?.value
+                    ) ||
+                    pallet.id === getCurrentPallet(pkg.get('package_id')?.value)
+                  "
+                >
+                  {{ pallet.pallet_code }}
+                  (Libre:
+                  {{
+                    getAvailableCapacity(pallet.id) +
+                      (pkg.get("moved_to_pallet")?.value === pallet.id ? 1 : 0)
+                  }})
 
-            <ion-button color="danger" fill="clear" (click)="removePackage(i)" *ngIf="packages.length > 1">
-              Eliminar Paquete
-            </ion-button>
+                  <span
+                    *ngIf="
+                      pallet.id ===
+                      getCurrentPallet(pkg.get('package_id')?.value)
+                    "
+                  >
+                    - ACTUAL</span
+                  >
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
           </ion-card-content>
         </ion-card>
       </div>
 
-      <ion-button fill="outline" expand="block" (click)="addPackage()">
-        + Añadir Paquete
-      </ion-button>
-
-      <ion-button expand="block" (click)="submit()" [disabled]="form.invalid" class="ion-margin-top">
-        Procesar {{ form.get('type')?.value | uppercase }}
+      <ion-button
+        expand="block"
+        (click)="submit()"
+        [disabled]="form.invalid"
+        class="ion-margin-top"
+      >
+        Procesar {{ form.get("type")?.value | uppercase }}
       </ion-button>
     </div>
   </form>
+
+  <div *ngIf="loading" class="ion-text-center">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando datos de almacén...</p>
+  </div>
 </ion-content>

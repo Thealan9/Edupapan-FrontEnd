@@ -15,6 +15,9 @@ export class AdminTickets {
 
     constructor(private http: HttpClient) {}
 
+    get(){
+      return this.http.get<any>(`${this.API}/admin/ticketI`);
+    }
     createEntry(data: Partial<any>) {
       return this.http.post<any>(`${this.API}/admin/ticket/entry`, data).pipe(
         tap( ()=> this.triggerRefresh())
