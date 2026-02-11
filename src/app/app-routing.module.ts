@@ -69,6 +69,12 @@ const routes: Routes = [
     data: { roles: ['admin'] },
     loadChildren: () => import('./admin/books/books.module').then( m => m.BooksPageModule)
   },
+  {
+    path: 'admin/pallets',
+    canMatch: [AuthGuard,RoleGuard],
+    data: { roles: ['admin'] },
+    loadChildren: () => import('./admin/pallets/pallets.module').then( m => m.PalletsPageModule)
+  },
 
   //warehouseman
 
@@ -126,6 +132,7 @@ const routes: Routes = [
     },
     loadChildren: () => import('./user/profile/profile.module').then( m => m.ProfilePageModule)
   },
+
 
 
 

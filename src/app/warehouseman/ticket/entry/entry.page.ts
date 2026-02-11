@@ -126,24 +126,24 @@ export class EntryPage implements OnInit {
         this.openAddDescriptionPackageStatus(id,'completed');
       }
     },
-    {
-      text: 'Dañado',
-      handler: () => {
-        this.openAddDescriptionPackageStatus(id,'damaged');
-      }
-    },
-    {
-      text: 'Perdido',
-      handler: () => {
-        this.openAddDescriptionPackageStatus(id,'missing');
-      }
-    },
-    {
-      text: 'otro',
-      handler: () => {
-        this.openAddDescriptionPackageStatus(id,'other');
-      }
-    },
+    // {
+    //   text: 'Dañado',
+    //   handler: () => {
+    //     this.openAddDescriptionPackageStatus(id,'damaged');
+    //   }
+    // },
+    // {
+    //   text: 'Perdido',
+    //   handler: () => {
+    //     this.openAddDescriptionPackageStatus(id,'missing');
+    //   }
+    // },
+    // {
+    //   text: 'otro',
+    //   handler: () => {
+    //     this.openAddDescriptionPackageStatus(id,'other');
+    //   }
+    // },
     {
       text: 'Cancel',
       role: 'cancel',

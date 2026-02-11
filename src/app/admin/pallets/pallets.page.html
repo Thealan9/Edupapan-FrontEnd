@@ -1,0 +1,57 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Pallets</ion-title>
+  </ion-toolbar>
+  <ion-button (click)="openCreate()">Añadir</ion-button>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="!loading">
+    <ion-item *ngFor="let p of pallets">
+      <ion-label>
+        <h2 style="font-weight: bold; text-transform: uppercase">
+          {{ p.pallet_code }}
+        </h2>
+        <p>Ubicación: <ion-text color="dark">{{ p.warehouse_location }}</ion-text></p>
+
+        <div style="margin-top: 8px">
+           <ion-chip
+          *ngIf="p.status ==='empty'"
+            color="success"
+            outline="true"
+            style="font-size: 12px"
+          >
+            <ion-label>Vacío</ion-label>
+          </ion-chip>
+          <ion-chip
+          *ngIf="p.status ==='open'"
+            color="primary"
+            outline="true"
+            style="font-size: 12px"
+          >
+            <ion-label>Abierto</ion-label>
+          </ion-chip>
+           <ion-chip
+          *ngIf="p.status ==='full'"
+            color="warning"
+            outline="true"
+            style="font-size: 12px"
+          >
+            <ion-label>Lleno</ion-label>
+          </ion-chip>
+        </div>
+      </ion-label>
+
+      <ion-button fill="outline" slot="end" (click)="openEdit(p)">
+        <ion-icon slot="start" name="create-outline"></ion-icon>
+        Editar
+      </ion-button>
+      <ion-button fill="outline" color="danger" (click)="delete(p.id)">
+        <ion-icon slot="start" name="trash-outline"></ion-icon>
+        Eliminar
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-spinner *ngIf="loading"></ion-spinner>
+</ion-content>
