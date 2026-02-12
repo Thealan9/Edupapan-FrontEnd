@@ -18,6 +18,12 @@ export class AdminTickets {
     get(){
       return this.http.get<any>(`${this.API}/admin/ticketI`);
     }
+    getWarehouseRequests(){
+      return this.http.get<any>(`${this.API}/admin/ticket/request-aprob`)
+    }
+    getWarehouseRequest(id: number){
+      return this.http.get<any>(`${this.API}/admin/ticket/${id}/request-aprob`)
+    }
     createEntry(data: Partial<any>) {
       return this.http.post<any>(`${this.API}/admin/ticket/entry`, data).pipe(
         tap( ()=> this.triggerRefresh())
@@ -37,6 +43,18 @@ export class AdminTickets {
 
     createChange(data: Partial<any>) {
       return this.http.post<any>(`${this.API}/admin/ticket/change`, data).pipe(
+        tap( ()=> this.triggerRefresh())
+      );
+    }
+
+    approvePartial(id:number){
+      return this.http.post<any>(`${this.API}/admin/ticket/${id}/accept-partial`,{}).pipe(
+        tap( ()=> this.triggerRefresh())
+      );
+    }
+
+    rejectPartial(id:number){
+      return this.http.post<any>(`${this.API}/admin/ticket/${id}/reject-partial`,{}).pipe(
         tap( ()=> this.triggerRefresh())
       );
     }

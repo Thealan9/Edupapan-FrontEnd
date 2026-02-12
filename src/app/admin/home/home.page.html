@@ -1,5 +1,4 @@
-<ion-content>
-  <ion-header>
+<ion-header>
     <ion-toolbar color="primary">
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
@@ -34,4 +33,44 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
+<ion-content>
+  <ion-grid >
+    <ion-row>
+      <ion-col size="12" size-md="4" size-lg="3">
+        <ion-list-header>
+          <ion-label>Notificaciones</ion-label>
+          <ion-badge color="warning" *ngIf="request.length > 0">{{ request.length }}</ion-badge>
+        </ion-list-header>
+
+        <ion-list *ngIf="loadingNotifi">
+          <ion-item *ngFor="let i of [1,2,3]">
+            <ion-label>
+              <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <ion-list *ngIf="!loadingNotifi">
+          <ion-item *ngIf="request.length === 0" lines="none">
+            <ion-label color="medium" class="ion-text-center">No hay pendientes</ion-label>
+          </ion-item>
+
+          <ion-item button (click)="openRequest(item.id)" *ngFor="let item of request" detail="true" class="notification-item">
+            <ion-label>
+              <h3>Ticket #{{ item.id }}</h3>
+              <p>Tipo: {{ item.type | titlecase }}</p>
+              <p><ion-note color="warning">Solicitud</ion-note></p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+
+      <ion-col size="12" size-md="8" size-lg="9">
+        <div class="main-content ion-padding">
+           <h2>Bienvenido al sistema</h2>
+           </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

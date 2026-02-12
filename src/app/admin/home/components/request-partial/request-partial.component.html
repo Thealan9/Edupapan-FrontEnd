@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Ticket #{{ TicketId }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="loading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando detalles...</p>
+  </div>
+
+  <div *ngIf="!loading && response">
+
+    <ion-item lines="none">
+      <ion-label>
+        <ion-note color="dark">
+          Faltantes: <strong>{{ response.faltantes }}</strong> de {{ response.quantity }}
+        </ion-note>
+      </ion-label>
+    </ion-item>
+
+    <h3>Paquetes Reportados</h3>
+
+    <ion-card *ngFor="let detail of response.details">
+      <ion-item lines="full">
+        <ion-icon name="cube-outline" slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <h2>Lote: {{ detail.package.batch_number }}</h2>
+          <p>ID Paquete: {{ detail.package_id }}</p>
+        </ion-label>
+        <ion-badge [color]="detail.status === 'damaged' ? 'danger' : 'warning'" slot="end">
+          {{ detail.status }}
+        </ion-badge>
+      </ion-item>
+
+      <ion-card-content>
+        <p><strong>Motivo:</strong> {{ detail.description || 'No especificado' }}</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+
+<ion-footer *ngIf="!loading">
+  <ion-toolbar>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="danger" fill="outline" (click)="reject()">
+          Rechazar
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" color="success" (click)="accept()">
+          Aprobar Parcial
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>
