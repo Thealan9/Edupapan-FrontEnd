@@ -108,6 +108,18 @@ const routes: Routes = [
     data: { roles: ['warehouseman'] },
     loadChildren: () => import('./warehouseman/ticket/removed/removed.module').then( m => m.RemovedPageModule)
   },
+  {
+    path: 'warehouseman/ticket/damaged/:id',
+    canMatch: [AuthGuard,RoleGuard],
+    data: { roles: ['warehouseman'] },
+    loadChildren: () => import('./warehouseman/ticket/removed/removed.module').then( m => m.RemovedPageModule)
+  },
+  {
+    path: 'warehouseman/ticket/partial_damaged/:id',
+    canMatch: [AuthGuard,RoleGuard],
+    data: { roles: ['warehouseman'] },
+    loadChildren: () => import('./warehouseman/ticket/removed/removed.module').then( m => m.RemovedPageModule)
+  },
 
 
   //driver

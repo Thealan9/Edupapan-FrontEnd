@@ -51,8 +51,8 @@ export class RemovedPage implements OnInit {
     this.Service.getTicket(this.ticketId).subscribe({
       next: ticket =>{
       this.ticketInfo = ticket;
-      if(this.ticketInfo.type !== 'removed'){
-        this.router.navigateByUrl('/warehouseman', { replaceUrl: true });
+      if (!['removed', 'damaged', 'partial_damaged'].includes(this.ticketInfo.type)) {
+          this.router.navigateByUrl('/warehouseman', { replaceUrl: true });
       }
       this.loading = false;
 

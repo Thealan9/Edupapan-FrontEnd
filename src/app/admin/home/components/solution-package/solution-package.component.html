@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-title>Solución de Incidencia</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="loading" class="ion-text-center">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <div *ngIf="!loading && response">
+    <ion-card color="light">
+      <ion-card-header>
+        <ion-card-subtitle>Paquete: {{ response.package.batch_number }}</ion-card-subtitle>
+        <ion-card-title>Reportado como: {{ response.status | uppercase }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <strong>Descripción del reporte:</strong>
+        <p>{{ response.description }}</p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-list>
+      <ion-list-header>¿Cómo desea proceder?</ion-list-header>
+
+      <ion-item>
+        <ion-label>Confirmar Incidencia</ion-label>
+        <ion-toggle [(ngModel)]="confirm" color="success"></ion-toggle>
+      </ion-item>
+
+      <div *ngIf="confirm">
+        <ng-container *ngIf="response.status === 'damaged'">
+          <ion-item>
+            <ion-label>¿Es daño parcial?</ion-label>
+            <ion-checkbox [(ngModel)]="isPartial" slot="end"></ion-checkbox>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Asignar Operario para retiro</ion-label>
+            <ion-select [(ngModel)]="assignedTo" placeholder="Seleccionar operario">
+              <ion-select-option *ngFor="let worker of workers" [value]="worker.id">
+                {{ worker.name }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-note class="ion-padding" color="medium">
+            Se generará un ticket tipo "{{ isPartial ? 'partial_damaged' : 'damaged' }}" para retirar el paquete.
+          </ion-note>
+        </ng-container>
+
+        <ng-container *ngIf="response.status === 'missing'">
+          <ion-note class="ion-padding" color="danger">
+            El paquete será marcado permanentemente como extraviado en el inventario.
+          </ion-note>
+        </ng-container>
+      </div>
+
+      <div *ngIf="!confirm" class="ion-padding">
+        <ion-note color="success">
+          Si no confirma, el paquete volverá a estar <strong>disponible</strong> y se cancelará el reporte.
+        </ion-note>
+      </div>
+    </ion-list>
+  </div>
+</ion-content>
+
+<ion-footer *ngIf="!loading">
+  <ion-toolbar>
+    <ion-button expand="block" (click)="submit()" [disabled]="confirm && response?.status === 'damaged' && !assignedTo">
+      Ejecutar Acción
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

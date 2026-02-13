@@ -9,6 +9,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { CreateComponent } from './components/create/create.component';
 import { RequestPartialComponent } from './components/request-partial/request-partial.component';
+import { SolutionPackageComponent } from './components/solution-package/solution-package.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { RequestPartialComponent } from './components/request-partial/request-pa
     HomePageRoutingModule,
     ReactiveFormsModule
   ],
-  declarations: [HomePage, CreateComponent,RequestPartialComponent]
+  declarations: [HomePage, CreateComponent,RequestPartialComponent,SolutionPackageComponent]
 })
 export class HomePageModule {}

@@ -7,6 +7,7 @@ import { CreateComponent } from './components/create/create.component';
 import { ModalController } from '@ionic/angular';
 import { AdminTickets } from '../services/admin-tickets';
 import { RequestPartialComponent } from './components/request-partial/request-partial.component';
+import { SolutionPackageComponent } from './components/solution-package/solution-package.component';
 
 @Component({
   selector: 'app-home',
@@ -54,10 +55,22 @@ export class HomePage  {
     this.Service.getWarehouseRequests().subscribe({
       next: (res) => {
         this.request = res;
-        this.loadingNotifi = false;
+        this.checkLoadingStatus();
       },
-      error: () => (this.loadingNotifi = false),
+      error: () => this.checkLoadingStatus(),
     });
+
+    this.Service.getPackageSolutions().subscribe({
+      next: (res) => {
+        this.solveDetails = res;
+        this.checkLoadingStatus();
+      },
+      error: () => this.checkLoadingStatus(),
+    });
+  }
+
+  private checkLoadingStatus() {
+    this.loadingNotifi = false;
   }
 
   async openCreate() {
@@ -76,6 +89,20 @@ export class HomePage  {
         component: RequestPartialComponent,
         componentProps:{
           TicketId:id
+        }
+      });
+
+      modal.onDidDismiss().then((res) => {
+      });
+
+      await modal.present();
+    }
+
+    async openSolution(id:number) {
+      const modal = await this.modalCtrl.create({
+        component: SolutionPackageComponent,
+        componentProps:{
+          detailId:id
         }
       });
 

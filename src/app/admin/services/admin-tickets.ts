@@ -24,6 +24,12 @@ export class AdminTickets {
     getWarehouseRequest(id: number){
       return this.http.get<any>(`${this.API}/admin/ticket/${id}/request-aprob`)
     }
+    getPackageSolutions(){
+      return this.http.get<any>(`${this.API}/admin/ticket-detail/solution`)
+    }
+    getPackageSolution(id: number){
+      return this.http.get<any>(`${this.API}/admin/ticket-detail/${id}/solution`)
+    }
     createEntry(data: Partial<any>) {
       return this.http.post<any>(`${this.API}/admin/ticket/entry`, data).pipe(
         tap( ()=> this.triggerRefresh())
@@ -58,6 +64,19 @@ export class AdminTickets {
         tap( ()=> this.triggerRefresh())
       );
     }
+
+    solutionDamage(id:number,data: Partial<any>){
+      return this.http.post<any>(`${this.API}/admin/ticket-detail/${id}/solution-damage`,data).pipe(
+        tap( ()=> this.triggerRefresh())
+      );
+    }
+
+    solutionMissing(id:number,data: Partial<any>){
+      return this.http.post<any>(`${this.API}/admin/ticket-detail/${id}/solution-missing`,data).pipe(
+        tap( ()=> this.triggerRefresh())
+      );
+    }
+
 
     triggerRefresh(){
       this._refresh.next();
