@@ -32,8 +32,6 @@ export class RoleGuard implements CanMatch {
               return this.router.createUrlTree(['/home']);
             } else if(user.role === 'warehouseman'){
               return this.router.createUrlTree(['/warehouseman']);
-            } else if(user.role === 'driver'){
-              return this.router.createUrlTree(['/driver']);
             }
             // else {
              // return this.router.createUrlTree(['/login']);

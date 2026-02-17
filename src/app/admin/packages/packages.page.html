@@ -1,0 +1,71 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Paquetes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="!loading">
+    <ion-item *ngFor="let p of packages">
+      <ion-label>
+        <h2 style="font-weight: bold; text-transform: uppercase">
+          {{ p.batch_number }}
+        </h2>
+        <ion-row>
+          <ion-col>
+            <p>Libro: <ion-text color="dark">{{ p.book.title }}</ion-text></p>
+          </ion-col>
+          <ion-col>
+            <p>
+              Cantidad: <ion-text color="dark">{{ p.book_quantity }}</ion-text>
+            </p>
+          </ion-col>
+          <ion-col>
+            <p>
+              Pallet: <ion-text color="dark">{{ p.pallet.pallet_code }}</ion-text>
+            </p>
+          </ion-col>
+          <ion-col>
+            <p>
+              Status: <ion-text color="dark">{{ p.status }}</ion-text>
+            </p>
+          </ion-col>
+        </ion-row>
+
+        <!-- <div style="margin-top: 8px">
+           <ion-chip
+          *ngIf="p.status ==='empty'"
+            color="success"
+            outline="true"
+            style="font-size: 12px"
+          >
+            <ion-label>Vacío</ion-label>
+          </ion-chip>
+          <ion-chip
+          *ngIf="p.status ==='open'"
+            color="primary"
+            outline="true"
+            style="font-size: 12px"
+          >
+            <ion-label>Abierto</ion-label>
+          </ion-chip>
+           <ion-chip
+          *ngIf="p.status ==='full'"
+            color="warning"
+            outline="true"
+            style="font-size: 12px"
+          >
+            <ion-label>Lleno</ion-label>
+          </ion-chip>
+        </div> -->
+      </ion-label>
+
+      <ion-button *ngIf="p.status ==='available'" fill="outline" slot="end" (click)="openEdit(p.id)">
+        <ion-icon slot="start" name="create-outline"></ion-icon>
+        Editar
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-spinner *ngIf="loading"></ion-spinner>
+</ion-content>

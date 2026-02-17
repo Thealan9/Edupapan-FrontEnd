@@ -58,10 +58,10 @@ const routes: Routes = [
     loadChildren: () => import('./admin/users/create/create.module').then( m => m.CreatePageModule)
   },
   {
-    path: 'admin/vehicles',
+    path: 'admin/packages',
     canMatch: [AuthGuard,RoleGuard],
     data: { roles: ['admin'] },
-    loadChildren: () => import('./admin/vehicles/vehicles.module').then( m => m.VehiclesPageModule)
+    loadChildren: () => import('./admin/packages/packages.module').then( m => m.PackagesPageModule)
   },
   {
     path: 'admin/books',
@@ -122,15 +122,6 @@ const routes: Routes = [
   },
 
 
-  //driver
-  {
-    path: 'driver',
-    canMatch: [AuthGuard,RoleGuard],
-    data: { roles: ['driver'] },
-    loadChildren: () => import('./driver/home/home.module').then( m => m.HomePageModule)
-  },
-
-
 
 
 
@@ -144,6 +135,7 @@ const routes: Routes = [
     },
     loadChildren: () => import('./user/profile/profile.module').then( m => m.ProfilePageModule)
   },
+
 
 
 

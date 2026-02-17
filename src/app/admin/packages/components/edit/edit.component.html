@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Editar Paquete #{{ packageId }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()"> Cerrar </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="loading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando información...</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loading">
+    <ion-list>
+
+      <ion-item>
+        <ion-label position="stacked">Número de Lote</ion-label>
+        <ion-input formControlName="batch_number" placeholder="Ej: AA-01"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Libro</ion-label>
+        <ion-select formControlName="book_id" placeholder="Seleccione un libro" interface="popover">
+          <ion-select-option *ngFor="let book of books" [value]="book.id">
+            {{ book.title }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Pallet</ion-label>
+        <ion-select formControlName="pallet_id" placeholder="Seleccione un pallet">
+          <ion-select-option *ngFor="let pallet of pallets" [value]="pallet.id">
+            {{ pallet.pallet_code }} (Espacios: {{ pallet.remaining_capacity }})
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Cantidad de Libros</ion-label>
+        <ion-input type="number" formControlName="book_quantity"></ion-input>
+      </ion-item>
+
+    </ion-list>
+
+    <div class="ion-padding">
+      <ion-button expand="block" type="submit" [disabled]="form.invalid">
+        Actualizar Paquete
+      </ion-button>
+    </div>
+  </form>
+</ion-content>
