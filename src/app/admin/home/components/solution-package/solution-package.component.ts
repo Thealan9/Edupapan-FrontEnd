@@ -6,12 +6,12 @@ import { AdminTickets } from 'src/app/admin/services/admin-tickets';
   selector: 'app-solution-package',
   templateUrl: './solution-package.component.html',
   styleUrls: ['./solution-package.component.scss'],
-  standalone:false
+  standalone: false,
 })
 export class SolutionPackageComponent {
   @Input() detailId!: number;
 
-  response:any = null;
+  response: any = null;
   loading = true;
 
   confirm: boolean = true;
@@ -19,10 +19,21 @@ export class SolutionPackageComponent {
   assignedTo: number | null = null;
   workers: any = null;
 
+  selectedAction: 'restore' | 'remove' | 'update' | null = null;
+  otherDescription: string = '';
+  updateData = {
+    batch_number: '',
+    book_id: null,
+    book_quantity: 1,
+    pallet_id: null,
+  };
+  pallets: any[] = [];
+  books: any[] = [];
+
   constructor(
     private modalCtrl: ModalController,
     private Service: AdminTickets,
-    private toast: ToastController
+    private toast: ToastController,
   ) {}
 
   ionViewWillEnter() {
@@ -38,6 +49,17 @@ export class SolutionPackageComponent {
           name,
           id,
         }));
+        this.pallets = res.pallets;
+        this.books = Object.entries(res.books).map(([title, id]) => ({
+          title,
+          id,
+        }));
+        if (this.response.package) {
+          this.updateData.batch_number = this.response.package.batch_number;
+          this.updateData.book_id = this.response.package.book_id;
+          this.updateData.book_quantity = this.response.package.book_quantity;
+          this.updateData.pallet_id = this.response.package.pallet_id;
+        }
         this.loading = false;
       },
       error: () => (this.loading = false),
@@ -48,24 +70,44 @@ export class SolutionPackageComponent {
       const data = {
         confirm: this.confirm,
         partial: this.isPartial,
-        assigned_to: this.assignedTo
+        assigned_to: this.assignedTo,
       };
-      console.log("datos ",data)
+      console.log('datos ', data);
 
       this.Service.solutionDamage(this.detailId, data).subscribe({
         next: (res) => this.handleSuccess(res.message),
-        error: (err) => console.error(err)
+        error: (err) => console.error(err),
       });
     } else if (this.response.status === 'missing') {
-      this.Service.solutionMissing(this.detailId, { confirm: this.confirm }).subscribe({
+      this.Service.solutionMissing(this.detailId, {
+        confirm: this.confirm,
+      }).subscribe({
         next: (res) => this.handleSuccess(res.message),
-        error: (err) => console.error(err)
+        error: (err) => console.error(err),
+      });
+    } else if (this.response.status === 'other') {
+      let payload: any = { action: this.selectedAction };
+
+      if (this.selectedAction === 'remove') {
+        payload.assigned_to = this.assignedTo;
+        payload.description = this.otherDescription;
+      } else if (this.selectedAction === 'update') {
+        payload = { ...payload, ...this.updateData };
+      }
+
+      this.Service.solutionOther(this.detailId, payload).subscribe({
+        next: (res) => this.handleSuccess(res.message),
+        error: (err) => console.error(err),
       });
     }
   }
 
   async handleSuccess(message: string) {
-    const t = await this.toast.create({ message, duration: 2000, color: 'success' });
+    const t = await this.toast.create({
+      message,
+      duration: 2000,
+      color: 'success',
+    });
     await t.present();
     this.modalCtrl.dismiss({ refresh: true });
   }
@@ -73,5 +115,4 @@ export class SolutionPackageComponent {
   close() {
     this.modalCtrl.dismiss();
   }
-
 }

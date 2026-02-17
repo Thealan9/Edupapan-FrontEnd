@@ -77,6 +77,12 @@ export class AdminTickets {
       );
     }
 
+    solutionOther(id:number,data: Partial<any>){
+      return this.http.post<any>(`${this.API}/admin/ticket-detail/${id}/solution-other`,data).pipe(
+        tap( ()=> this.triggerRefresh())
+      );
+    }
+
 
     triggerRefresh(){
       this._refresh.next();
