@@ -24,13 +24,13 @@ export class AdminBooks {
   }
 
   createBook(data: Partial<Book>) {
-    return this.http.post<Book>(`${this.API}/admin/book`, data).pipe(
+    return this.http.post<any>(`${this.API}/admin/book`, data).pipe(
       tap( ()=> this.triggerRefresh())
     );
   }
 
   updateBook(id: number, data: Partial<Book>) {
-    return this.http.put<Book>(`${this.API}/admin/book/${id}`, data).pipe(
+    return this.http.put<any>(`${this.API}/admin/book/${id}`, data).pipe(
       tap( ()=> this.triggerRefresh())
     );
   }
@@ -40,7 +40,7 @@ export class AdminBooks {
   }
 
   deleteBook(id: number) {
-    return this.http.delete(`${this.API}/admin/book/${id}`);
+    return this.http.delete<any>(`${this.API}/admin/book/${id}`);
   }
 
 }

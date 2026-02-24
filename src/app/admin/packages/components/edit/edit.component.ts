@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { AdminPackages } from 'src/app/admin/services/admin-packages';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { Package } from 'src/app/interfaces/admin/package.model';
 import { PackageResponse } from 'src/app/interfaces/admin/packageResonse.model';
 
@@ -60,11 +61,34 @@ export class EditComponent  implements OnInit {
 
     const data = this.form.getRawValue() as Partial<Package>;
 
-      this.Service.updatePackage(this.packageId, data).subscribe(() =>
-        this.close(true),
-      );
+      this.Service.updatePackage(this.packageId, data).subscribe({
+        next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.close(true);
+            this.showAlert(err.error.message, 'warning');
+          } else {
+            this.close(true);
+            this.showAlert('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
 
   }
+
+  async showAlert(
+        message: string,
+        type: 'success' | 'error' | 'warning'
+      ) {
+        const modal = await this.modalCtrl.create({
+          component: AlertComponent,
+          componentProps: { message, type },
+          cssClass: 'small-alert-modal',
+          backdropDismiss: false,
+        });
+
+        await modal.present();
+      }
 
   close(refresh = false) {
     this.modalCtrl.dismiss({ refresh });

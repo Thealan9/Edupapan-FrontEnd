@@ -1,0 +1,21 @@
+// alerta
+.alert-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.alert-box {
+  padding: 25px;
+  text-align: center;
+}
+
+ion-icon {
+  font-size: 70px;
+  margin-bottom: 15px;
+}
+
+p {
+  font-size: 15px;
+  margin-bottom: 20px;
+}

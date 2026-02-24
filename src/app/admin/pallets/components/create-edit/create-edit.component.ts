@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { AdminPallets } from 'src/app/admin/services/admin-pallets';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { Pallet } from 'src/app/interfaces/admin/pallet.model';
 
 @Component({
@@ -42,13 +43,47 @@ export class CreateEditComponent  implements OnInit {
     const data = this.form.getRawValue() as Partial<Pallet>;
 
     if (this.isEdit) {
-      this.Service.updatePallet(this.data!.id, data).subscribe(() =>
-        this.close(true),
-      );
+      this.Service.updatePallet(this.data!.id, data).subscribe({
+        next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.close(true);
+            this.showAlert(err.error.message, 'warning');
+          } else {
+            this.close(true);
+            this.showAlert('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
     } else {
-      this.Service.createPallet(data).subscribe(() => this.close(true));
+      this.Service.createPallet(data).subscribe({
+        next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.close(true);
+            this.showAlert(err.error.message, 'warning');
+          } else {
+            this.close(true);
+            this.showAlert('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
     }
   }
+
+  async showAlert(
+        message: string,
+        type: 'success' | 'error' | 'warning'
+      ) {
+        const modal = await this.modalCtrl.create({
+          component: AlertComponent,
+          componentProps: { message, type },
+          cssClass: 'small-alert-modal',
+          backdropDismiss: false,
+        });
+
+        await modal.present();
+      }
 
   close(refresh = false) {
     this.modalCtrl.dismiss({ refresh });

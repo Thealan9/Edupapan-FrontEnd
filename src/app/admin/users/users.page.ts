@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AdminUsers } from '../services/admin-users';
 import { User } from 'src/app/interfaces/admin/user.model';
 import { Auth } from 'src/app/core/auth';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
+import { ModalController } from '@ionic/angular';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-users',
@@ -15,7 +18,8 @@ export class UsersPage implements OnInit {
   loading = true;
   authUser!: User;
 
-  constructor(private adminUsers: AdminUsers,private auth: Auth) { }
+  private snack = inject(MatSnackBar);
+  constructor(private adminUsers: AdminUsers,private auth: Auth,private modalCtrl: ModalController,) { }
 
   async ngOnInit() {
     const user = await this.auth.getUser();
@@ -52,12 +56,53 @@ export class UsersPage implements OnInit {
   }
 
   toggleActive(user: User) {
-  this.adminUsers.toggleActive(user.id).subscribe(() => this.loadUsers());
+  this.adminUsers.toggleActive(user.id).subscribe({
+        next: (res) => {this.loadUsers(); this.showToast(res.message, 'success')},
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.showToast(err.error.message, 'warning');
+          } else {
+            this.showToast('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
   }
 
   delete(user: User){
     if (!confirm('¿Eliminar usuario?')) return;
-    this.adminUsers.deleteUser(user.id).subscribe(() => this.loadUsers());
+    this.adminUsers.deleteUser(user.id).subscribe({
+        next: (res) => {this.loadUsers(); this.showAlert(res.message, 'success')},
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.showAlert(err.error.message, 'warning');
+          } else {
+            this.showAlert('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
+  }
+
+  async showAlert(
+        message: string,
+        type: 'success' | 'error' | 'warning'
+      ) {
+        const modal = await this.modalCtrl.create({
+          component: AlertComponent,
+          componentProps: { message, type },
+          cssClass: 'small-alert-modal',
+          backdropDismiss: false,
+        });
+
+        await modal.present();
+    }
+
+  showToast(message: string, type: 'success' | 'error' | 'warning') {
+    this.snack.open(message, '✖', {
+      duration: 5000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      panelClass: [`snackbar-${type}`],
+    });
   }
 
 }

@@ -3,6 +3,7 @@ import { Book } from 'src/app/interfaces/admin/book.model';
 import { AdminBooks } from '../services/admin-books';
 import { ModalController } from '@ionic/angular';
 import { CreateEditComponent } from './components/create-edit/create-edit.component';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
 
 @Component({
   selector: 'app-books',
@@ -40,7 +41,16 @@ export class BooksPage implements OnInit {
 
   delete(id: number) {
     if (!confirm('¿Eliminar libro?')) return;
-    this.Service.deleteBook(id).subscribe(() => this.load());
+    this.Service.deleteBook(id).subscribe({
+        next: (res) => {this.load(); this.showAlert(res.message, 'success')},
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.showAlert(err.error.message, 'warning');
+          } else {
+            this.showAlert('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
   }
 
   async openCreate() {
@@ -71,4 +81,19 @@ export class BooksPage implements OnInit {
 
     await modal.present();
   }
+
+  async showAlert(
+        message: string,
+        type: 'success' | 'error' | 'warning'
+      ) {
+        const modal = await this.modalCtrl.create({
+          component: AlertComponent,
+          componentProps: { message, type },
+          cssClass: 'small-alert-modal',
+          backdropDismiss: false,
+        });
+
+        await modal.present();
+      }
+
 }

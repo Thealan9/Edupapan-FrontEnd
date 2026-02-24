@@ -25,7 +25,7 @@ export class AdminUsers {
   }
 
   createUser(data: Partial<User>) {
-      return this.http.post<User>(`${this.API}/admin/users`, data).pipe(
+      return this.http.post<any>(`${this.API}/admin/users`, data).pipe(
       tap( ()=> this.triggerRefresh())
     );
   }
@@ -41,11 +41,11 @@ export class AdminUsers {
   }
 
   deleteUser(id: number) {
-  return this.http.delete(`${this.API}/admin/users/${id}`);
+  return this.http.delete<any>(`${this.API}/admin/users/${id}`);
   }
 
   toggleActive(id: number) {
-  return this.http.patch(`${this.API}/admin/users/${id}/toggle-active`, {});
+  return this.http.patch<any>(`${this.API}/admin/users/${id}/toggle-active`, {});
   }
 
 }

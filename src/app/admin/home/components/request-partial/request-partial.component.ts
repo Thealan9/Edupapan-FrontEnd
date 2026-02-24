@@ -38,15 +38,36 @@ export class RequestPartialComponent {
 
 
   accept() {
-      this.Service.approvePartial(this.TicketId).subscribe(() =>
-        this.close(true),
-      );
+      this.Service.approvePartial(this.TicketId).subscribe({
+        next: (res) => this.handleSuccess(res.message, 'success'),
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.handleSuccess(err.error.message, 'warning');
+          } else {
+            this.handleSuccess('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
   }
 
   reject() {
-      this.Service.rejectPartial(this.TicketId).subscribe(() =>
-        this.close(true),
-      );
+      this.Service.rejectPartial(this.TicketId).subscribe({
+        next: (res) => this.handleSuccess(res.message, 'success'),
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.handleSuccess(err.error.message, 'warning');
+          } else {
+            this.handleSuccess('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
+  }
+
+  async handleSuccess(message: string, color: string) {
+    await this.modalCtrl.dismiss({
+      message: message,
+      type: color,
+    });
   }
   close(refresh = false) {
     this.modalCtrl.dismiss({ refresh });

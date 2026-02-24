@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { AdminTickets } from 'src/app/admin/services/admin-tickets';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
 
 @Component({
   selector: 'app-create',
@@ -218,14 +219,72 @@ export class CreateComponent implements OnInit {
     const type = data.type;
     console.log('Submitting ticket data:', type);
     if (type === 'entry') {
-      this.Service.createEntry(data).subscribe(() => this.close(true));
+      this.Service.createEntry(data).subscribe({
+        next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.close(true);
+            this.showAlert(err.error.message, 'warning');
+          } else {
+            this.close(true);
+            this.showAlert('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
     } else if (type === 'sale') {
-      this.Service.createSale(data).subscribe(() => this.close(true));
+      this.Service.createSale(data).subscribe({
+        next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.close(true);
+            this.showAlert(err.error.message, 'warning');
+          } else {
+            this.close(true);
+            this.showAlert('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
     } else if (type === 'removed') {
-      this.Service.createRemoved(data).subscribe(() => this.close(true));
+      this.Service.createRemoved(data).subscribe({
+        next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.close(true);
+            this.showAlert(err.error.message, 'warning');
+          } else {
+            this.close(true);
+            this.showAlert('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
     } else if (type === 'change') {
-      this.Service.createChange(data).subscribe(() => this.close(true));
+      this.Service.createChange(data).subscribe({
+        next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.close(true);
+            this.showAlert(err.error.message, 'warning');
+          } else {
+            this.close(true);
+            this.showAlert('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
     }
+  }
+
+  async showAlert(
+    message: string,
+    type: 'success' | 'error' | 'warning'
+  ) {
+    const modal = await this.modalCtrl.create({
+      component: AlertComponent,
+      componentProps: { message, type },
+      cssClass: 'small-alert-modal',
+      backdropDismiss: false,
+    });
+
+    await modal.present();
   }
 
   close(refresh = false) {

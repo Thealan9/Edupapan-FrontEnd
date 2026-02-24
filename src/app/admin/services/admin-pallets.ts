@@ -24,13 +24,13 @@ export class AdminPallets {
   }
 
   createPallet(data: Partial<Pallet>) {
-    return this.http.post<Pallet>(`${this.API}/admin/pallet`, data).pipe(
+    return this.http.post<any>(`${this.API}/admin/pallet`, data).pipe(
       tap( ()=> this.triggerRefresh())
     );
   }
 
   updatePallet(id: number, data: Partial<Pallet>) {
-    return this.http.put<Pallet>(`${this.API}/admin/pallet/${id}`, data).pipe(
+    return this.http.put<any>(`${this.API}/admin/pallet/${id}`, data).pipe(
       tap( ()=> this.triggerRefresh())
     );
   }
@@ -40,7 +40,7 @@ export class AdminPallets {
   }
 
   deletePallet(id: number) {
-    return this.http.delete(`${this.API}/admin/pallet/${id}`);
+    return this.http.delete<any>(`${this.API}/admin/pallet/${id}`);
   }
 
 

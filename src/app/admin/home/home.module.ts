@@ -10,6 +10,8 @@ import { HomePage } from './home.page';
 import { CreateComponent } from './components/create/create.component';
 import { RequestPartialComponent } from './components/request-partial/request-partial.component';
 import { SolutionPackageComponent } from './components/solution-package/solution-package.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
 
 @NgModule({
   imports: [
@@ -17,8 +19,10 @@ import { SolutionPackageComponent } from './components/solution-package/solution
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSnackBarModule,
+
   ],
-  declarations: [HomePage, CreateComponent,RequestPartialComponent,SolutionPackageComponent]
+  declarations: [HomePage, CreateComponent,RequestPartialComponent,SolutionPackageComponent,AlertComponent]
 })
 export class HomePageModule {}

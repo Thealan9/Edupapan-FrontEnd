@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ModalController, ToastController } from '@ionic/angular';
+import { Component, Input } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { AdminTickets } from 'src/app/admin/services/admin-tickets';
 
 @Component({
@@ -33,7 +33,6 @@ export class SolutionPackageComponent {
   constructor(
     private modalCtrl: ModalController,
     private Service: AdminTickets,
-    private toast: ToastController,
   ) {}
 
   ionViewWillEnter() {
@@ -72,18 +71,30 @@ export class SolutionPackageComponent {
         partial: this.isPartial,
         assigned_to: this.assignedTo,
       };
-      console.log('datos ', data);
+
 
       this.Service.solutionDamage(this.detailId, data).subscribe({
-        next: (res) => this.handleSuccess(res.message),
-        error: (err) => console.error(err),
+        next: (res) => this.handleSuccess(res.message, 'success'),
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.handleSuccess(err.error.message, 'warning');
+          } else {
+            this.handleSuccess('Oops, ocurrió un error!', 'error');
+          }
+        },
       });
     } else if (this.response.status === 'missing') {
       this.Service.solutionMissing(this.detailId, {
         confirm: this.confirm,
       }).subscribe({
-        next: (res) => this.handleSuccess(res.message),
-        error: (err) => console.error(err),
+        next: (res) => this.handleSuccess(res.message, 'success'),
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.handleSuccess(err.error.message, 'warning');
+          } else {
+            this.handleSuccess('Oops, ocurrió un error!', 'error');
+          }
+        },
       });
     } else if (this.response.status === 'other') {
       let payload: any = { action: this.selectedAction };
@@ -96,20 +107,23 @@ export class SolutionPackageComponent {
       }
 
       this.Service.solutionOther(this.detailId, payload).subscribe({
-        next: (res) => this.handleSuccess(res.message),
-        error: (err) => console.error(err),
+        next: (res) => this.handleSuccess(res.message, 'success'),
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.handleSuccess(err.error.message, 'warning');
+          } else {
+            this.handleSuccess('Oops, ocurrió un error!', 'error');
+          }
+        },
       });
     }
   }
 
-  async handleSuccess(message: string) {
-    const t = await this.toast.create({
-      message,
-      duration: 2000,
-      color: 'success',
+  async handleSuccess(message: string, color: string) {
+    await this.modalCtrl.dismiss({
+      message: message,
+      type: color,
     });
-    await t.present();
-    this.modalCtrl.dismiss({ refresh: true });
   }
 
   close() {

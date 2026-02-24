@@ -1,26 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/auth';
 import { AdminDashboard } from '../services/admin-dashboard';
 import { AdminDashboardResponse } from 'src/app/interfaces/admin/admin-dashboard.interface';
 import { CreateComponent } from './components/create/create.component';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { AdminTickets } from '../services/admin-tickets';
 import { RequestPartialComponent } from './components/request-partial/request-partial.component';
 import { SolutionPackageComponent } from './components/solution-package/solution-package.component';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  standalone:false,
+  standalone: false,
 })
-export class HomePage  {
+export class HomePage {
   stats!: AdminDashboardResponse['stats'];
   activity: AdminDashboardResponse['recent_activity'] = [];
 
   request: any[] = [];
-  solveDetails:any[]=[];
+  solveDetails: any[] = [];
   loadingNotifi = true;
 
   constructor(
@@ -29,6 +30,7 @@ export class HomePage  {
     private Service: AdminTickets,
     private dashboard: AdminDashboard,
     private modalCtrl: ModalController,
+    private alertCtrl: AlertController
   ) {}
 
   logout() {
@@ -40,7 +42,7 @@ export class HomePage  {
       error: async () => {
         await this.auth.logout();
         this.router.navigateByUrl('/login', { replaceUrl: true });
-      }
+      },
     });
   }
   ionViewWillEnter() {
@@ -74,42 +76,60 @@ export class HomePage  {
   }
 
   async openCreate() {
-      const modal = await this.modalCtrl.create({
-        component: CreateComponent,
-      });
+    const modal = await this.modalCtrl.create({
+      component: CreateComponent,
+    });
 
-      modal.onDidDismiss().then((res) => {
-      });
+    modal.onDidDismiss().then((res) => {});
 
-      await modal.present();
-    }
+    await modal.present();
+  }
 
-    async openRequest(id:number) {
-      const modal = await this.modalCtrl.create({
-        component: RequestPartialComponent,
-        componentProps:{
-          TicketId:id
-        }
-      });
+  async openRequest(id: number) {
+    const modal = await this.modalCtrl.create({
+      component: RequestPartialComponent,
+      componentProps: {
+        TicketId: id,
+      },
+    });
 
-      modal.onDidDismiss().then((res) => {
-      });
+    modal.onDidDismiss().then(async (res) => {
+      if (res?.data) {
+        this.showAlert(res.data.message, res.data.type);
+      }
+    });
 
-      await modal.present();
-    }
+    await modal.present();
+  }
 
-    async openSolution(id:number) {
-      const modal = await this.modalCtrl.create({
-        component: SolutionPackageComponent,
-        componentProps:{
-          detailId:id
-        }
-      });
+  async openSolution(id: number) {
+    const modal = await this.modalCtrl.create({
+      component: SolutionPackageComponent,
+      componentProps: {
+        detailId: id,
+      },
+    });
 
-      modal.onDidDismiss().then((res) => {
-      });
+    modal.onDidDismiss().then(async (res) => {
+      if (res?.data) {
+        this.showAlert(res.data.message, res.data.type);
+      }
+    });
 
-      await modal.present();
-    }
+    await modal.present();
+  }
 
+  async showAlert(
+  message: string,
+  type: 'success' | 'error' | 'warning'
+) {
+  const modal = await this.modalCtrl.create({
+    component: AlertComponent,
+    componentProps: { message, type },
+    cssClass: 'small-alert-modal',
+    backdropDismiss: false,
+  });
+
+  await modal.present();
+}
 }

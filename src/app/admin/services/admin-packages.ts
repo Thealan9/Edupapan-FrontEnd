@@ -25,7 +25,7 @@ export class AdminPackages {
   }
 
   updatePackage(id: number, data: Partial<Package>) {
-    return this.http.put<Package>(`${this.API}/admin/package/${id}`, data).pipe(
+    return this.http.put<any>(`${this.API}/admin/package/${id}`, data).pipe(
       tap( ()=> this.triggerRefresh())
     );
   }

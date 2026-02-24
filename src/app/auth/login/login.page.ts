@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { Auth } from 'src/app/core/auth';
 
 @Component({
@@ -19,7 +21,8 @@ export class LoginPage {
   constructor(
     private fb: FormBuilder,
     private auth: Auth,
-    private router: Router
+    private router: Router,
+    private modalCtrl: ModalController
   ) {}
 
   async ionViewWillEnter() {
@@ -44,8 +47,29 @@ export class LoginPage {
       }
     },
       error: err => {
-        console.error('Login error', err);
+        if (err.status === 401 || err.status === 403) {
+            this.showAlert(err.error.message, 'warning');
+          }else{
+            this.showAlert('Oops, ocurrió un error!', 'error');
+          }
       }
     });
   }
+
+  async showAlert(
+        message: string,
+        type: 'success' | 'error' | 'warning'
+      ) {
+        const modal = await this.modalCtrl.create({
+          component: AlertComponent,
+          componentProps: { message, type },
+          cssClass: 'small-alert-modal',
+          backdropDismiss: false,
+        });
+
+        await modal.present();
+        setTimeout(() => {
+          modal.dismiss();
+        }, 2500);
+      }
 }

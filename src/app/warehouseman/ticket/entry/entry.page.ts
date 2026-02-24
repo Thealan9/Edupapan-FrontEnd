@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WarehouseTicket } from '../../services/warehouse-ticket';
 import { TicketResponse } from 'src/app/interfaces/admin/ticketResponse.model';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-entry',
@@ -32,10 +35,12 @@ export class EntryPage implements OnInit {
   alertMessage = '';
   alertButtons: any[] = [];
 
+  private snack = inject(MatSnackBar);
   constructor(
     private route: ActivatedRoute,
     private Service: WarehouseTicket,
-    private router: Router
+    private router: Router,
+    private modalCtrl: ModalController
   ) {}
 
   ngOnInit() {
@@ -67,20 +72,28 @@ export class EntryPage implements OnInit {
 
   confirm() {
     this.Service.completeTicketEntry(this.ticketId).subscribe({
-      next: () => this.router.navigateByUrl('/warehouseman', { replaceUrl: true }),
+      next: (res) => {this.router.navigateByUrl('/warehouseman', { replaceUrl: true }); this.showAlert(res.message, 'success')},
       error: (err) => {
-          if (err.status === 409) {
+        if (err.status === 409) {
           this.setupPartialAlert(err.error);
+        } else if ( err.status === 422){
+          this.showAlert(err.error.message, 'warning');
         } else {
-          console.error("Error desconocido", err);
+          this.showAlert('Oops, ocurrió un error!', 'error');
         }
       },
     });
   }
   confirmPartial() {
     this.Service.completePartial(this.ticketId).subscribe({
-      next: () => this.router.navigateByUrl('/warehouseman', { replaceUrl: true }),
-      error: (err) => console.error("Error al completar parcial", err)
+      next: (res) => {this.router.navigateByUrl('/warehouseman', { replaceUrl: true }); this.showAlert(res.message, 'success');},
+      error: (err) => {
+        if (err.status === 409 || err.status === 422) {
+          this.showAlert(err.error.message, 'warning');
+        } else {
+          this.showAlert('Oops, ocurrió un error!', 'error');
+        }
+      },
     });
   }
 
@@ -107,11 +120,18 @@ export class EntryPage implements OnInit {
 
   sendPartialRequest() {
     this.Service.requestPartial(this.ticketId).subscribe({
-      next: () => {
+      next: (res) => {
         this.isAlertOpen = false;
         this.router.navigateByUrl('/warehouseman', { replaceUrl: true });
+        this.showAlert(res.message, 'success');
       },
-      error: (err) => console.error("Error al solicitar parcial", err)
+      error: (err) => {
+        if (err.status === 409 || err.status === 422) {
+          this.showAlert(err.error.message, 'warning');
+        } else {
+          this.showAlert('Oops, ocurrió un error!', 'error');
+        }
+      },
     });
   }
 
@@ -161,11 +181,18 @@ export class EntryPage implements OnInit {
       description,
     };
     this.Service.processDetails(id, data).subscribe({
-      next: () => {
+      next: (res) => {
         this.isDeatilPackageStatus = false;
-        this.loadTicket();
+        this.Service.triggerRefresh();
+        this.showToast(res.message, 'success')
       },
-      error: (err) => console.error("Error al actualizar el estado del paquete", err)
+      error: (err) => {
+        if (err.status === 409 || err.status === 422) {
+            this.showToast(err.error.message, 'warning');
+          } else {
+            this.showToast('Oops, ocurrió un error!', 'error');
+          }
+      }
     });
   }
   openAddDescriptionPackageStatus(id: number,status: string){
@@ -218,5 +245,29 @@ export class EntryPage implements OnInit {
     ]
   }
 }
+
+async showAlert(
+        message: string,
+        type: 'success' | 'error' | 'warning'
+      ) {
+        const modal = await this.modalCtrl.create({
+          component: AlertComponent,
+          componentProps: { message, type },
+          cssClass: 'small-alert-modal',
+          backdropDismiss: false,
+        });
+
+        await modal.present();
+    }
+
+  showToast(message: string, type: 'success' | 'error' | 'warning') {
+    this.snack.open(message, '✖', {
+      duration: 5000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      panelClass: [`snackbar-${type}`],
+    });
+  }
+
 
 }

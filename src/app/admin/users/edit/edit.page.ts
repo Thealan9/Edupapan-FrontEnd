@@ -3,6 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminUsers } from '../../services/admin-users';
 import { User } from 'src/app/interfaces/admin/user.model';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-edit',
@@ -26,7 +28,9 @@ export class EditPage implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private adminUsers: AdminUsers,
-    private router: Router
+    private router: Router,
+    private modalCtrl: ModalController,
+
   ) {}
 
   ngOnInit() {
@@ -56,14 +60,29 @@ export class EditPage implements OnInit {
     const data = this.form.getRawValue() as Partial<User>;
 
     this.adminUsers.updateUser(this.userId, data).subscribe({
-      next: () => this.router.navigateByUrl('/admin/users'),
+      next: (res) => {this.router.navigateByUrl('/admin/users', { replaceUrl: true }),this.showAlert(res.message, 'success')},
       error: (err) => {
-        if (err.status === 422) {
-          alert(err.error.message);
-        } else {
-          console.error(err);
-        }
+        if (err.status === 409 || err.status === 422) {
+            this.showAlert(err.error.message, 'warning');
+          } else {
+            this.showAlert('Oops, ocurrió un error!', 'error');
+          }
       },
     });
   }
+
+  async showAlert(
+        message: string,
+        type: 'success' | 'error' | 'warning'
+      ) {
+        const modal = await this.modalCtrl.create({
+          component: AlertComponent,
+          componentProps: { message, type },
+          cssClass: 'small-alert-modal',
+          backdropDismiss: false,
+        });
+
+        await modal.present();
+      }
+
 }

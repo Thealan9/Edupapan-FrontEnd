@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/auth';
 import { WarehouseTicket } from '../services/warehouse-ticket';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +14,7 @@ export class HomePage implements OnInit {
   tickets: any[] = [];
   loading = true;
 
+  private snack = inject(MatSnackBar);
   constructor(
     private auth: Auth,
     private router: Router,
@@ -37,7 +39,16 @@ export class HomePage implements OnInit {
     });
   }
   acceptTicket(id: number) {
-    this.Service.acceptTicket(id).subscribe(() => this.load());
+    this.Service.acceptTicket(id).subscribe({
+        next: (res) => {this.Service.triggerRefresh(); this.showToast(res.message, 'success')},
+        error: (err) => {
+          if (err.status === 409 || err.status === 422) {
+            this.showToast(err.error.message, 'warning');
+          } else {
+            this.showToast('Oops, ocurrió un error!', 'error');
+          }
+        },
+      });
   }
 
   logout() {
@@ -52,5 +63,15 @@ export class HomePage implements OnInit {
       }
     });
   }
+
+  showToast(message: string, type: 'success' | 'error' | 'warning') {
+    this.snack.open(message, '✖', {
+      duration: 5000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      panelClass: [`snackbar-${type}`],
+    });
+  }
+
 
 }
