@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, MaxLengthValidator, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { finalize } from 'rxjs';
 import { AdminBooks } from 'src/app/admin/services/admin-books';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { Book } from 'src/app/interfaces/admin/book.model';
@@ -15,6 +16,7 @@ export class CreateEditComponent  implements OnInit {
 @Input() data?: Book;
 
   isEdit = false;
+  isSubmitting = false;
 
   form = this.fb.group({
     title: ['',[Validators.required,Validators.maxLength(255)],],
@@ -39,11 +41,15 @@ export class CreateEditComponent  implements OnInit {
 
   submit() {
     if (this.form.invalid) return;
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
 
     const data = this.form.getRawValue() as Partial<Book>;
 
     if (this.isEdit) {
-      this.Service.updateBook(this.data!.id, data).subscribe({
+      this.Service.updateBook(this.data!.id, data)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
         error: (err) => {
           if (err.status === 409 || err.status === 422) {
@@ -56,7 +62,9 @@ export class CreateEditComponent  implements OnInit {
         },
       });
     } else {
-      this.Service.createBook(data).subscribe({
+      this.Service.createBook(data)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
         error: (err) => {
           if (err.status === 409 || err.status === 422) {

@@ -5,6 +5,7 @@ import { AdminUsers } from '../../services/admin-users';
 import { User } from 'src/app/interfaces/admin/user.model';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { ModalController } from '@ionic/angular';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-edit',
@@ -16,6 +17,7 @@ export class EditPage implements OnInit {
   userId!: number;
   loading = true;
   error: boolean = false;
+  isSubmitting = false;
 
   form = this.fb.group({
     name: ['', Validators.required],
@@ -56,10 +58,14 @@ export class EditPage implements OnInit {
 
   save() {
     if (this.form.invalid) return;
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
 
     const data = this.form.getRawValue() as Partial<User>;
 
-    this.adminUsers.updateUser(this.userId, data).subscribe({
+    this.adminUsers.updateUser(this.userId, data)
+    .pipe(finalize(() => this.isSubmitting = false))
+    .subscribe({
       next: (res) => {this.router.navigateByUrl('/admin/users', { replaceUrl: true }),this.showAlert(res.message, 'success')},
       error: (err) => {
         if (err.status === 409 || err.status === 422) {

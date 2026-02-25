@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/auth';
 import { WarehouseTicket } from '../services/warehouse-ticket';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +14,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class HomePage implements OnInit {
   tickets: any[] = [];
   loading = true;
+  isSubmitting = false;
+
 
   private snack = inject(MatSnackBar);
   constructor(
@@ -39,7 +42,11 @@ export class HomePage implements OnInit {
     });
   }
   acceptTicket(id: number) {
-    this.Service.acceptTicket(id).subscribe({
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+    this.Service.acceptTicket(id)
+    .pipe(finalize(() => this.isSubmitting = false))
+    .subscribe({
         next: (res) => {this.Service.triggerRefresh(); this.showToast(res.message, 'success')},
         error: (err) => {
           if (err.status === 409 || err.status === 422) {

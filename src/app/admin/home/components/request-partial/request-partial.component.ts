@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { finalize } from 'rxjs';
 import { AdminTickets } from 'src/app/admin/services/admin-tickets';
 
 @Component({
@@ -14,6 +15,8 @@ export class RequestPartialComponent {
 
   response:any = null;
   loading = true;
+  isSubmitting = false;
+
 
 
   constructor(
@@ -38,7 +41,12 @@ export class RequestPartialComponent {
 
 
   accept() {
-      this.Service.approvePartial(this.TicketId).subscribe({
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+
+      this.Service.approvePartial(this.TicketId)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => this.handleSuccess(res.message, 'success'),
         error: (err) => {
           if (err.status === 409 || err.status === 422) {
@@ -51,7 +59,11 @@ export class RequestPartialComponent {
   }
 
   reject() {
-      this.Service.rejectPartial(this.TicketId).subscribe({
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+      this.Service.rejectPartial(this.TicketId)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => this.handleSuccess(res.message, 'success'),
         error: (err) => {
           if (err.status === 409 || err.status === 422) {

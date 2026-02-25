@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { AdminTickets } from 'src/app/admin/services/admin-tickets';
+import { finalize } from 'rxjs/operators';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
 
 @Component({
@@ -18,6 +19,7 @@ export class CreateComponent implements OnInit {
   pallets: any[] = [];
   books: any[] = [];
   packagesData: any[] = [];
+  isSubmitting = false;
 
   form = this.fb.group({
     type: ['', Validators.required],
@@ -201,6 +203,9 @@ export class CreateComponent implements OnInit {
   }
 
   submit() {
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+
     if (this.form.get('type')?.value !== 'entry') {
       const selectedPackageIds = this.packages.value.map(
         (p: any) => p.package_id,
@@ -217,9 +222,10 @@ export class CreateComponent implements OnInit {
 
     const data = this.form.getRawValue();
     const type = data.type;
-    console.log('Submitting ticket data:', type);
     if (type === 'entry') {
-      this.Service.createEntry(data).subscribe({
+      this.Service.createEntry(data)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
         error: (err) => {
           if (err.status === 409 || err.status === 422) {
@@ -232,7 +238,9 @@ export class CreateComponent implements OnInit {
         },
       });
     } else if (type === 'sale') {
-      this.Service.createSale(data).subscribe({
+      this.Service.createSale(data)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
         error: (err) => {
           if (err.status === 409 || err.status === 422) {
@@ -245,7 +253,9 @@ export class CreateComponent implements OnInit {
         },
       });
     } else if (type === 'removed') {
-      this.Service.createRemoved(data).subscribe({
+      this.Service.createRemoved(data)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
         error: (err) => {
           if (err.status === 409 || err.status === 422) {
@@ -258,7 +268,9 @@ export class CreateComponent implements OnInit {
         },
       });
     } else if (type === 'change') {
-      this.Service.createChange(data).subscribe({
+      this.Service.createChange(data)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
         error: (err) => {
           if (err.status === 409 || err.status === 422) {

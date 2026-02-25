@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { finalize } from 'rxjs';
 import { AdminTickets } from 'src/app/admin/services/admin-tickets';
 
 @Component({
@@ -10,6 +11,7 @@ import { AdminTickets } from 'src/app/admin/services/admin-tickets';
 })
 export class SolutionPackageComponent {
   @Input() detailId!: number;
+  isSubmitting = false;
 
   response: any = null;
   loading = true;
@@ -65,6 +67,8 @@ export class SolutionPackageComponent {
     });
   }
   submit() {
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
     if (this.response.status === 'damaged') {
       const data = {
         confirm: this.confirm,
@@ -73,7 +77,9 @@ export class SolutionPackageComponent {
       };
 
 
-      this.Service.solutionDamage(this.detailId, data).subscribe({
+      this.Service.solutionDamage(this.detailId, data)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => this.handleSuccess(res.message, 'success'),
         error: (err) => {
           if (err.status === 409 || err.status === 422) {
@@ -86,7 +92,9 @@ export class SolutionPackageComponent {
     } else if (this.response.status === 'missing') {
       this.Service.solutionMissing(this.detailId, {
         confirm: this.confirm,
-      }).subscribe({
+      })
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => this.handleSuccess(res.message, 'success'),
         error: (err) => {
           if (err.status === 409 || err.status === 422) {
@@ -106,7 +114,9 @@ export class SolutionPackageComponent {
         payload = { ...payload, ...this.updateData };
       }
 
-      this.Service.solutionOther(this.detailId, payload).subscribe({
+      this.Service.solutionOther(this.detailId, payload)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => this.handleSuccess(res.message, 'success'),
         error: (err) => {
           if (err.status === 409 || err.status === 422) {

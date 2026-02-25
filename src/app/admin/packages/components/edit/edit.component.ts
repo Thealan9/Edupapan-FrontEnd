@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { finalize } from 'rxjs';
 import { AdminPackages } from 'src/app/admin/services/admin-packages';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { Package } from 'src/app/interfaces/admin/package.model';
@@ -15,6 +16,7 @@ import { PackageResponse } from 'src/app/interfaces/admin/packageResonse.model';
 export class EditComponent  implements OnInit {
 
   @Input() packageId!: number;
+  isSubmitting = false;
 
   package: any = null;
   pallets: any[] = [];
@@ -58,10 +60,14 @@ export class EditComponent  implements OnInit {
 
   submit() {
     if (this.form.invalid) return;
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
 
     const data = this.form.getRawValue() as Partial<Package>;
 
-      this.Service.updatePackage(this.packageId, data).subscribe({
+      this.Service.updatePackage(this.packageId, data)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
         error: (err) => {
           if (err.status === 409 || err.status === 422) {

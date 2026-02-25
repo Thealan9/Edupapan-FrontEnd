@@ -5,6 +5,7 @@ import { WarehouseTicket } from '../../services/warehouse-ticket';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModalController } from '@ionic/angular';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-sale',
@@ -13,7 +14,7 @@ import { AlertComponent } from 'src/app/components/alert/alert.component';
   standalone: false,
 })
 export class SalePage implements OnInit {
-
+  isSubmitting = false;
 
   ticketId!: number;
   ticketInfo!: TicketResponse;
@@ -73,7 +74,11 @@ export class SalePage implements OnInit {
   }
 
   confirm() {
-    this.Service.completeTicketSale(this.ticketId).subscribe({
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+    this.Service.completeTicketSale(this.ticketId)
+    .pipe(finalize(() => this.isSubmitting = false))
+    .subscribe({
       next: (res) => {this.router.navigateByUrl('/warehouseman', { replaceUrl: true }); this.showAlert(res.message, 'success')},
       error: (err) => {
           if (err.status === 409) {
@@ -89,7 +94,11 @@ export class SalePage implements OnInit {
     });
   }
   confirmPartial() {
-    this.Service.completePartial(this.ticketId).subscribe({
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+    this.Service.completePartial(this.ticketId)
+    .pipe(finalize(() => this.isSubmitting = false))
+    .subscribe({
       next: (res) => {this.router.navigateByUrl('/warehouseman', { replaceUrl: true }); this.showAlert(res.message, 'success');},
       error: (err) => {
         if (err.status === 409 || err.status === 422) {
@@ -144,7 +153,11 @@ export class SalePage implements OnInit {
   }
 
   sendPartialRequest() {
-    this.Service.requestPartial(this.ticketId).subscribe({
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+    this.Service.requestPartial(this.ticketId)
+    .pipe(finalize(() => this.isSubmitting = false))
+    .subscribe({
       next: (res) => {
         this.isAlertOpen = false;
         this.router.navigateByUrl('/warehouseman', { replaceUrl: true });
@@ -161,7 +174,11 @@ export class SalePage implements OnInit {
   }
 
   addReplacement() {
-    this.Service.autocompleteTicket(this.ticketId).subscribe({
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+    this.Service.autocompleteTicket(this.ticketId)
+    .pipe(finalize(() => this.isSubmitting = false))
+    .subscribe({
       next: (res) => {
         this.isAlertOpen = false;
         this.showToast(res.message, 'success');
@@ -217,11 +234,15 @@ export class SalePage implements OnInit {
 
   }
   sendPackageStatusDetail(id: number, status: string, description: string | null) {
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
     const data = {
       status,
       description,
     };
-    this.Service.processDetails(id, data).subscribe({
+    this.Service.processDetails(id, data)
+    .pipe(finalize(() => this.isSubmitting = false))
+    .subscribe({
       next: (res) => {
         this.isDeatilPackageStatus = false;
         this.Service.triggerRefresh();

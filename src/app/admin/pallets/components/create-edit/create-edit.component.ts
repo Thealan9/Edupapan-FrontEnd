@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { finalize } from 'rxjs';
 import { AdminPallets } from 'src/app/admin/services/admin-pallets';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { Pallet } from 'src/app/interfaces/admin/pallet.model';
@@ -14,6 +15,7 @@ import { Pallet } from 'src/app/interfaces/admin/pallet.model';
 export class CreateEditComponent  implements OnInit {
 
   @Input() data?: Pallet;
+  isSubmitting = false;
 
   isEdit = false;
 
@@ -39,11 +41,15 @@ export class CreateEditComponent  implements OnInit {
 
   submit() {
     if (this.form.invalid) return;
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
 
     const data = this.form.getRawValue() as Partial<Pallet>;
 
     if (this.isEdit) {
-      this.Service.updatePallet(this.data!.id, data).subscribe({
+      this.Service.updatePallet(this.data!.id, data)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
         error: (err) => {
           if (err.status === 409 || err.status === 422) {
@@ -56,7 +62,9 @@ export class CreateEditComponent  implements OnInit {
         },
       });
     } else {
-      this.Service.createPallet(data).subscribe({
+      this.Service.createPallet(data)
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
         next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
         error: (err) => {
           if (err.status === 409 || err.status === 422) {

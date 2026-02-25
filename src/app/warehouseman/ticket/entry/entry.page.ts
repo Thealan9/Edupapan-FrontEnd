@@ -5,6 +5,7 @@ import { TicketResponse } from 'src/app/interfaces/admin/ticketResponse.model';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModalController } from '@ionic/angular';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-entry',
@@ -13,6 +14,7 @@ import { ModalController } from '@ionic/angular';
   standalone: false,
 })
 export class EntryPage implements OnInit {
+  isSubmitting = false;
 
   ticketId!: number;
   ticketInfo!: TicketResponse;
@@ -71,7 +73,11 @@ export class EntryPage implements OnInit {
   }
 
   confirm() {
-    this.Service.completeTicketEntry(this.ticketId).subscribe({
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+    this.Service.completeTicketEntry(this.ticketId)
+    .pipe(finalize(() => this.isSubmitting = false))
+    .subscribe({
       next: (res) => {this.router.navigateByUrl('/warehouseman', { replaceUrl: true }); this.showAlert(res.message, 'success')},
       error: (err) => {
         if (err.status === 409) {
@@ -85,7 +91,11 @@ export class EntryPage implements OnInit {
     });
   }
   confirmPartial() {
-    this.Service.completePartial(this.ticketId).subscribe({
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+    this.Service.completePartial(this.ticketId)
+    .pipe(finalize(() => this.isSubmitting = false))
+    .subscribe({
       next: (res) => {this.router.navigateByUrl('/warehouseman', { replaceUrl: true }); this.showAlert(res.message, 'success');},
       error: (err) => {
         if (err.status === 409 || err.status === 422) {
@@ -119,7 +129,11 @@ export class EntryPage implements OnInit {
   }
 
   sendPartialRequest() {
-    this.Service.requestPartial(this.ticketId).subscribe({
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+    this.Service.requestPartial(this.ticketId)
+    .pipe(finalize(() => this.isSubmitting = false))
+    .subscribe({
       next: (res) => {
         this.isAlertOpen = false;
         this.router.navigateByUrl('/warehouseman', { replaceUrl: true });
@@ -176,11 +190,15 @@ export class EntryPage implements OnInit {
 
   }
   sendPackageStatusDetail(id: number, status: string, description: string | null) {
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
     const data = {
       status,
       description,
     };
-    this.Service.processDetails(id, data).subscribe({
+    this.Service.processDetails(id, data)
+    .pipe(finalize(() => this.isSubmitting = false))
+    .subscribe({
       next: (res) => {
         this.isDeatilPackageStatus = false;
         this.Service.triggerRefresh();
