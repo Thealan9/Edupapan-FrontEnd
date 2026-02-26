@@ -1,67 +1,70 @@
 <ion-app>
-  <ion-split-pane contentId="main-content" when="lg">
+  <ion-split-pane contentId="main-content" when="lg" [style.--side-width]="isCollapsed ? '80px' : '280px'">
 
     <ion-menu contentId="main-content" type="overlay">
       <ion-content class="--background: #0f172a;">
-        <div class="flex flex-col h-full bg-slate-900 border-r border-slate-800">
+        <div class="flex flex-col h-full bg-slate-900 border-r border-slate-800 transition-all duration-300">
 
-          <div class="p-6">
-            <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl border border-slate-700">
+          <div class="p-6 flex items-center justify-between">
+            <div *ngIf="!isCollapsed" class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl border border-slate-700">
               <div class="bg-blue-600 p-2 rounded-lg shadow-lg shadow-blue-500/20">
                 <ion-icon name="grid" class="text-white text-xl flex"></ion-icon>
               </div>
-              <span class="text-white font-bold tracking-tight text-lg italic">EDUMEX</span>
+              <span class="text-white font-bold tracking-tight text-lg italic text-nowrap">EDUMEX</span>
             </div>
+
+            <button (click)="isCollapsed = !isCollapsed" class="hidden lg:flex text-slate-400 hover:text-white p-2 hover:bg-slate-800 rounded-lg transition-colors">
+              <ion-icon [name]="isCollapsed ? 'chevron-forward-outline' : 'chevron-back-outline'"></ion-icon>
+            </button>
           </div>
 
           <div class="flex-1 px-4 space-y-1">
-            <p class="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold mb-4 ml-2">Menú Principal</p>
+            <p *ngIf="!isCollapsed" class="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold mb-4 ml-2 text-nowrap">Menú Principal</p>
 
             <ion-menu-toggle auto-hide="false">
               <nav class="space-y-1">
-                <ion-item routerLink="/admin/users" routerLinkActive="active-link" lines="none" class="sidebar-item">
+                <ion-item routerLink="/admin/users" routerLinkActive="active-link" lines="none" class="sidebar-item" [class.collapsed]="isCollapsed">
                   <ion-icon slot="start" name="people-outline"></ion-icon>
-                  <ion-label>Usuarios</ion-label>
+                  <ion-label *ngIf="!isCollapsed">Usuarios</ion-label>
                 </ion-item>
 
-                <ion-item routerLink="/admin/packages" routerLinkActive="active-link" lines="none" class="sidebar-item">
+                <ion-item routerLink="/admin/packages" routerLinkActive="active-link" lines="none" class="sidebar-item" [class.collapsed]="isCollapsed">
                   <ion-icon slot="start" name="cube-outline"></ion-icon>
-                  <ion-label>Paquetes</ion-label>
+                  <ion-label *ngIf="!isCollapsed">Paquetes</ion-label>
                 </ion-item>
 
-                <ion-item routerLink="/admin/books" routerLinkActive="active-link" lines="none" class="sidebar-item">
+                <ion-item routerLink="/admin/books" routerLinkActive="active-link" lines="none" class="sidebar-item" [class.collapsed]="isCollapsed">
                   <ion-icon slot="start" name="book-outline"></ion-icon>
-                  <ion-label>Libros</ion-label>
+                  <ion-label *ngIf="!isCollapsed">Libros</ion-label>
                 </ion-item>
 
-                <ion-item routerLink="/admin/pallets" routerLinkActive="active-link" lines="none" class="sidebar-item">
+                <ion-item routerLink="/admin/pallets" routerLinkActive="active-link" lines="none" class="sidebar-item" [class.collapsed]="isCollapsed">
                   <ion-icon slot="start" name="layers-outline"></ion-icon>
-                  <ion-label>Pallets</ion-label>
+                  <ion-label *ngIf="!isCollapsed">Pallets</ion-label>
                 </ion-item>
               </nav>
             </ion-menu-toggle>
 
             <div class="my-6 border-t border-slate-800 mx-2"></div>
 
-            <button (click)="openCreate()"
-                    class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-900/20 active:scale-95">
+            <button (click)="openCreate()" class="ticket-btn" [class.collapsed]="isCollapsed">
               <ion-icon name="add-circle"></ion-icon>
-              ABRIR TICKET
+              <span *ngIf="!isCollapsed" class="text-nowrap">ABRIR TICKET</span>
             </button>
           </div>
 
           <div class="p-4 border-t border-slate-800">
-            <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer" routerLink="/profile">
-              <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center border border-blue-400/30">
+            <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer" routerLink="/profile" [class.justify-center]="isCollapsed">
+              <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center border border-blue-400/30 shrink-0">
                 <ion-icon name="person" class="text-blue-400 text-xl"></ion-icon>
               </div>
-              <div class="flex-1 min-w-0">
+              <div *ngIf="!isCollapsed" class="flex-1 min-w-0">
                 <p class="text-sm font-semibold text-white truncate">Admin Almacén</p>
                 <p class="text-xs text-slate-500 truncate">Ver perfil</p>
               </div>
             </div>
 
-            <ion-button fill="clear" (click)="logout()" class="w-full --color: #94a3b8; font-size: 12px; margin-top: 10px; --padding-start: 0;">
+            <ion-button *ngIf="!isCollapsed" fill="clear" (click)="logout()" class="w-full --color: #94a3b8; font-size: 12px; margin-top: 10px; --padding-start: 0;">
               <ion-icon slot="start" name="log-out-outline"></ion-icon>
               Cerrar Sesión
             </ion-button>
@@ -71,15 +74,12 @@
     </ion-menu>
 
     <div class="ion-page" id="main-content">
-
       <ion-header class="ion-no-border" *ngIf="isMobile$ | async">
         <ion-toolbar class="--background: #0f172a; border-b border-slate-800">
           <ion-buttons slot="start">
             <ion-menu-button class="text-blue-400"></ion-menu-button>
           </ion-buttons>
-          <ion-title class="text-white font-bold text-sm tracking-wide">
-            EDUMEX
-          </ion-title>
+          <ion-title class="text-white font-bold text-sm tracking-wide">EDUMEX</ion-title>
         </ion-toolbar>
       </ion-header>
 

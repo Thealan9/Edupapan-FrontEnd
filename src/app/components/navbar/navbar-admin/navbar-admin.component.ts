@@ -16,6 +16,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 })
 export class NavbarAdminComponent {
   isMobile$: Observable<boolean>;
+  isCollapsed = false;
+
   constructor(
     private modalCtrl: ModalController,
     private auth: Auth,
@@ -25,6 +27,10 @@ export class NavbarAdminComponent {
     this.isMobile$ = this.breakpointObserver
       .observe(['(max-width: 1023px)'])
       .pipe(map(result => result.matches));
+  }
+
+  toggleCollapse() {
+    this.isCollapsed = !this.isCollapsed;
   }
 
   async openCreate() {
