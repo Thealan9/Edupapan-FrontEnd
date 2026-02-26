@@ -5,7 +5,11 @@
       <ion-content class="--background: #0f172a;">
         <div class="flex flex-col h-full bg-slate-900 border-r border-slate-800 transition-all duration-300">
 
-          <div class="p-6 flex items-center justify-between">
+          <div class="flex items-center pt-6 pb-4 transition-all duration-300"
+          [class.px-6]="!isCollapsed"
+          [class.px-0]="isCollapsed"
+          [class.justify-between]="!isCollapsed"
+          [class.justify-center]="isCollapsed">
             <div *ngIf="!isCollapsed" class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl border border-slate-700">
               <div class="bg-blue-600 p-2 rounded-lg shadow-lg shadow-blue-500/20">
                 <ion-icon name="grid" class="text-white text-xl flex"></ion-icon>
@@ -59,7 +63,8 @@
                 <ion-icon name="person" class="text-blue-400 text-xl"></ion-icon>
               </div>
               <div *ngIf="!isCollapsed" class="flex-1 min-w-0">
-                <p class="text-sm font-semibold text-white truncate">Perfil <ion-icon name="chevron-up-outline"></ion-icon></p>
+                <p class="text-sm font-semibold text-white truncate flex items-center gap-1">
+                  Perfil <ion-icon name="chevron-up-outline" class="text-xs"></ion-icon></p>
               </div>
             </div>
 
@@ -96,7 +101,7 @@
           </ion-header>
 
           <ion-content class="--background: #f8fafc;">
-            <main class="max-w-7xl mx-auto p-6 md:p-10">
+            <main class="w-full h-full">
               <router-outlet></router-outlet>
             </main>
           </ion-content>
