@@ -7,8 +7,12 @@
   font-weight: 500;
   height: 50px;
 
+  --inner-padding-end: 0px;
+  --padding-end: 0px;
+
   &::part(native) {
     transition: all 0.2s ease;
+    padding-right: 0px;
   }
 
   ion-icon {
@@ -16,11 +20,45 @@
     font-size: 1.4rem;
     margin-right: 12px;
     opacity: 0.8;
+    transition: all 0.3s ease;
   }
 
   &.collapsed {
-    --padding-start: 8px;
-    ion-icon { margin-right: 0; }
+    // 1. Quitamos todos los paddings del contenedor padre
+    --padding-start: 0px !important;
+    --inner-padding-end: 0px !important;
+    --padding-end: 0px !important;
+
+    &::part(native) {
+      padding: 0 !important;
+      justify-content: center !important;
+    }
+
+    // 2. ESTA ES LA CLAVE: Atacamos el contenedor del slot "start"
+    // que es el que envuelve al icono y suele tener un ancho fijo
+    &::part(inner) {
+      padding: 0 !important;
+      margin: 0 !important;
+      display: flex;
+      justify-content: center !important;
+      flex: 1; // Hacemos que ocupe todo el ancho para poder centrar dentro
+    }
+
+    // 3. Forzamos al icono a ignorar el espacio del slot
+    ion-icon {
+      margin: 0 !important;
+      padding: 0 !important;
+      position: absolute; // Lo sacamos del flujo para centrarlo respecto al item
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%); // Centrado matemático perfecto
+      font-size: 1.6rem;
+    }
+
+    // 4. Ocultamos el wrapper sobrante que mencionabas
+    .input-wrapper {
+      display: none !important;
+    }
   }
 
   &:hover {
@@ -77,6 +115,51 @@ ion-split-pane {
 }
 
 ion-header.ion-no-border::after { display: none; }
+
+.profile-popover {
+  --width: 180px;
+  --background: #1e293b; // Fondo pizarra oscuro
+  --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+
+  ion-content {
+    --background: #1e293b;
+    --color: #ffffff; // Forzamos texto blanco global
+  }
+
+  .popover-item {
+    --background: #1e293b; // Fondo base igual al popover
+    --color: #ffffff !important; // Texto blanco siempre visible
+    --padding-start: 12px;
+    --border-radius: 8px;
+    --inner-padding-end: 8px;
+    margin: 4px;
+    font-size: 0.9rem;
+
+    // Forzamos el color del label para que no sea negro
+    ion-label {
+      color: #ffffff !important;
+      margin-left: 8px;
+    }
+
+    // Estilo especial para la opción de cerrar sesión
+    &.logout {
+      --color: #f87171 !important; // Rojo suave (Red 400)
+      ion-label {
+        color: #f87171 !important;
+      }
+    }
+
+    &:hover {
+      --background: #334155; // Gris un poco más claro al pasar el mouse
+    }
+  }
+
+  // Quitamos líneas divisorias automáticas de Ionic que puedan ser oscuras
+  ion-list {
+    background: #1e293b !important;
+    padding: 4px 0;
+  }
+}
 
 @media (min-width: 1024px) {
   #main-content {
