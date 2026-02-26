@@ -1,0 +1,58 @@
+// 1. Items del Menú Lateral (Sidebar)
+// Conservamos esto porque controla el look interno del Shadow DOM de Ionic
+.sidebar-item {
+  --background: transparent;
+  --color: #94a3b8; // Color del texto y ahora del icono (Slate 400)
+  --border-radius: 12px;
+  --padding-start: 12px;
+  margin-bottom: 4px;
+  font-weight: 500;
+
+  &::part(native) {
+    transition: all 0.2s ease;
+  }
+
+  // ESTA ES LA CLAVE: Forzamos al icono a usar el color del texto
+  ion-icon {
+    color: currentColor !important;
+    font-size: 1.25rem;
+    margin-right: 12px;
+    opacity: 0.8; // Un poco de transparencia en reposo para estética
+  }
+
+  &:hover {
+    --background: rgba(59, 130, 246, 0.1);
+    --color: #ffffff; // Al hacer hover, todo brilla en blanco
+
+    ion-icon {
+      opacity: 1;
+    }
+  }
+
+  &.active-link {
+    --background: #3b82f6;
+    --color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+
+    ion-icon {
+      opacity: 1;
+      color: #ffffff !important;
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+    }
+  }
+}
+
+// 2. Ajustes de Layout y Header
+// Solo mantenemos lo que quita líneas y ajusta el scroll
+ion-header.ion-no-border::after {
+  display: none;
+}
+
+// Esto es vital para que en PC el contenido suba hasta arriba al no haber header
+@media (min-width: 1024px) {
+  #main-content {
+    --offset-top: 0px !important;
+    padding-top: 0 !important;
+  }
+}

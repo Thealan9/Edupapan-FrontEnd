@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from 'src/app/core/auth';
 
@@ -8,7 +8,7 @@ import { Auth } from 'src/app/core/auth';
   styleUrls: ['home.page.scss'],
   standalone: false,
 })
-export class HomePage {
+export class HomePage implements OnInit{
 
   constructor(
     private auth: Auth,
@@ -28,7 +28,7 @@ export class HomePage {
     });
   }
 
-  ionViewWillEnter() {
+  ngOnInit() {
     this.auth.yo().subscribe(user => {
     this.auth.setUser(user);
   });

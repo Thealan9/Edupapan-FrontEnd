@@ -1,38 +1,3 @@
-<ion-header>
-    <ion-toolbar color="primary">
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-
-      <ion-title>Mi Aplicación</ion-title>
-      <ion-buttons slot="end">
-        <ion-button routerLink="/admin/users" routerDirection="forward">
-          Usuarios
-        </ion-button>
-        <ion-button routerLink="/admin/packages" routerDirection="forward">
-          Paquetes
-        </ion-button>
-        <ion-button routerLink="/admin/books" routerDirection="forward">
-          Libros
-        </ion-button>
-        <ion-button routerLink="/admin/pallets" routerDirection="forward">
-          Pallets
-        </ion-button>
-        <ion-button (click)="openCreate()"> Abrir Ticket </ion-button>
-
-        <ion-button (click)="logout()"> Salir </ion-button>
-      </ion-buttons>
-
-      <ion-buttons slot="end">
-        <ion-button routerLink="/profile" routerDirection="forward">
-          <ion-icon slot="icon-only" name="person-circle"></ion-icon>
-        </ion-button>
-        <ion-button>
-          <ion-icon slot="icon-only" name="search"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
 <ion-content>
   <ion-grid>
     <ion-row>

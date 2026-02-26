@@ -11,7 +11,7 @@ import { PackageResponse } from 'src/app/interfaces/admin/packageResonse.model';
   styleUrls: ['./packages.page.scss'],
   standalone:false
 })
-export class PackagesPage{
+export class PackagesPage implements OnInit{
 
     packages: PackageResponse[] = [];
     loading = true;
@@ -21,7 +21,7 @@ export class PackagesPage{
       private modalCtrl: ModalController,
     ) {}
 
-    ionViewWillEnter(){
+    ngOnInit(){
       this.load();
 
       this.Service.refresh$.subscribe(() => {

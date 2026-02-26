@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { finalize } from 'rxjs';
 import { AdminTickets } from 'src/app/admin/services/admin-tickets';
@@ -9,7 +9,7 @@ import { AdminTickets } from 'src/app/admin/services/admin-tickets';
   styleUrls: ['./solution-package.component.scss'],
   standalone: false,
 })
-export class SolutionPackageComponent {
+export class SolutionPackageComponent implements OnInit {
   @Input() detailId!: number;
   isSubmitting = false;
 
@@ -37,7 +37,7 @@ export class SolutionPackageComponent {
     private Service: AdminTickets,
   ) {}
 
-  ionViewWillEnter() {
+  ngOnInit() {
     this.load();
   }
 

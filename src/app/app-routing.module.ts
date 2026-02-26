@@ -3,6 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/auth-guard';
 import { UserResolver } from './core/user.resolver';
 import { RoleGuard } from './core/role-guard';
+import { NavbarAdminComponent } from './components/navbar/navbar-admin/navbar-admin.component';
 
 const routes: Routes = [
   {
@@ -31,50 +32,44 @@ const routes: Routes = [
 
 
   //------------------------ Admin------------------------------
-  {
+ {
   path: 'admin',
-  canMatch: [AuthGuard,RoleGuard],
+  component: NavbarAdminComponent,
+  canMatch: [AuthGuard, RoleGuard],
   data: { roles: ['admin'] },
-  loadChildren: () => import('./admin/home/home.module').then(m => m.HomePageModule)
-  },
-
-  //users
-  {
-    path: 'admin/users',
-    canMatch: [AuthGuard,RoleGuard],
-    data: { roles: ['admin'] },
-    loadChildren: () => import('./admin/users/users.module').then( m => m.UsersPageModule)
-  },
-  {
-    path: 'admin/users/edit/:id',
-    canMatch: [AuthGuard,RoleGuard],
-    data: { roles: ['admin'] },
-    loadChildren: () => import('./admin/users/edit/edit.module').then( m => m.EditPageModule)
-  },
-  {
-    path: 'admin/users/create',
-    canMatch: [AuthGuard,RoleGuard],
-    data: { roles: ['admin'] },
-    loadChildren: () => import('./admin/users/create/create.module').then( m => m.CreatePageModule)
-  },
-  {
-    path: 'admin/packages',
-    canMatch: [AuthGuard,RoleGuard],
-    data: { roles: ['admin'] },
-    loadChildren: () => import('./admin/packages/packages.module').then( m => m.PackagesPageModule)
-  },
-  {
-    path: 'admin/books',
-    canMatch: [AuthGuard,RoleGuard],
-    data: { roles: ['admin'] },
-    loadChildren: () => import('./admin/books/books.module').then( m => m.BooksPageModule)
-  },
-  {
-    path: 'admin/pallets',
-    canMatch: [AuthGuard,RoleGuard],
-    data: { roles: ['admin'] },
-    loadChildren: () => import('./admin/pallets/pallets.module').then( m => m.PalletsPageModule)
-  },
+  children: [
+    {
+      path: '',
+      loadChildren: () =>
+        import('./admin/home/home.module')
+          .then(m => m.HomePageModule)
+    },
+    {
+      path: 'users',
+      loadChildren: () =>
+        import('./admin/users/users.module')
+          .then(m => m.UsersPageModule)
+    },
+    {
+      path: 'packages',
+      loadChildren: () =>
+        import('./admin/packages/packages.module')
+          .then(m => m.PackagesPageModule)
+    },
+    {
+      path: 'books',
+      loadChildren: () =>
+        import('./admin/books/books.module')
+          .then(m => m.BooksPageModule)
+    },
+    {
+      path: 'pallets',
+      loadChildren: () =>
+        import('./admin/pallets/pallets.module')
+          .then(m => m.PalletsPageModule)
+    }
+  ]
+},
 
   //warehouseman
 

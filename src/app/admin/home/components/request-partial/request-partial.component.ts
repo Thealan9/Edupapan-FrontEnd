@@ -10,7 +10,7 @@ import { AdminTickets } from 'src/app/admin/services/admin-tickets';
   styleUrls: ['./request-partial.component.scss'],
   standalone:false
 })
-export class RequestPartialComponent {
+export class RequestPartialComponent implements OnInit{
   @Input() TicketId!: number;
 
   response:any = null;
@@ -24,7 +24,7 @@ export class RequestPartialComponent {
     private Service: AdminTickets,
   ) {}
 
-  ionViewWillEnter() {
+  ngOnInit() {
     this.load();
   }
 

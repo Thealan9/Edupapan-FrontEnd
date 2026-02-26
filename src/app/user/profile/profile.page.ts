@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -7,12 +7,12 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./profile.page.scss'],
   standalone: false,
 })
-export class ProfilePage  {
+export class ProfilePage implements OnInit {
   user: any;
 
   constructor(private route: ActivatedRoute) {}
 
-  ionViewWillEnter() {
+  ngOnInit() {
     // this.auth.yo().subscribe({
     //   next: (res) => {
     //     this.user = res;
