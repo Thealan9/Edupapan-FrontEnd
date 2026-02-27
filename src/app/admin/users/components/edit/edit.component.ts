@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AdminUsers } from '../../services/admin-users';
-import { User } from 'src/app/interfaces/admin/user.model';
-import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { ModalController } from '@ionic/angular';
 import { finalize } from 'rxjs';
+import { AdminUsers } from 'src/app/admin/services/admin-users';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
+import { User } from 'src/app/interfaces/admin/user.model';
 
 @Component({
   selector: 'app-edit',
-  templateUrl: './edit.page.html',
-  styleUrls: ['./edit.page.scss'],
-  standalone: false,
+  templateUrl: './edit.component.html',
+  styleUrls: ['./edit.component.scss'],
+  standalone:false
 })
-export class EditPage implements OnInit {
-  userId!: number;
+export class EditComponent  implements OnInit {
+  @Input() userId!: number;
+
   loading = true;
   error: boolean = false;
   isSubmitting = false;
@@ -36,7 +37,6 @@ export class EditPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.userId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadUser();
   }
 
@@ -66,7 +66,7 @@ export class EditPage implements OnInit {
     this.adminUsers.updateUser(this.userId, data)
     .pipe(finalize(() => this.isSubmitting = false))
     .subscribe({
-      next: (res) => {this.router.navigateByUrl('/admin/users', { replaceUrl: true }),this.showAlert(res.message, 'success')},
+      next: (res) => {this.close(true),this.showAlert(res.message, 'success')},
       error: (err) => {
         if (err.status === 409 || err.status === 422) {
             this.showAlert(err.error.message, 'warning');
@@ -90,5 +90,8 @@ export class EditPage implements OnInit {
 
         await modal.present();
       }
+close(refresh = false) {
+    this.modalCtrl.dismiss({ refresh });
+  }
 
 }

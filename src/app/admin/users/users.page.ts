@@ -5,6 +5,8 @@ import { Auth } from 'src/app/core/auth';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { ModalController } from '@ionic/angular';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { EditComponent } from './components/edit/edit.component';
+import { CreateComponent } from './components/create/create.component';
 
 @Component({
   selector: 'app-users',
@@ -104,5 +106,29 @@ export class UsersPage implements OnInit {
       panelClass: [`snackbar-${type}`],
     });
   }
+
+  async openCreate() {
+      const modal = await this.modalCtrl.create({
+        component: CreateComponent,
+      });
+
+      modal.onDidDismiss().then((res) => {
+      });
+
+      await modal.present();
+    }
+
+   async openEdit(id: number) {
+        const modal = await this.modalCtrl.create({
+          component: EditComponent,
+          componentProps: {
+            userId:id
+          },
+        });
+        modal.onDidDismiss().then((res) => {
+           });
+
+        await modal.present();
+      }
 
 }

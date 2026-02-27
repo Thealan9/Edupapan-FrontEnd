@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AdminUsers } from '../../services/admin-users';
-import { User } from 'src/app/interfaces/admin/user.model';
-import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { ModalController } from '@ionic/angular';
 import { finalize } from 'rxjs';
+import { AdminUsers } from 'src/app/admin/services/admin-users';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
+import { User } from 'src/app/interfaces/admin/user.model';
 
 @Component({
   selector: 'app-create',
-  templateUrl: './create.page.html',
-  styleUrls: ['./create.page.scss'],
+  templateUrl: './create.component.html',
+  styleUrls: ['./create.component.scss'],
   standalone: false
 })
-export class CreatePage implements OnInit {
+export class CreateComponent  implements OnInit {
 
   isSubmitting = false;
 
@@ -52,7 +52,7 @@ save() {
   this.userService.createUser(data)
   .pipe(finalize(() => this.isSubmitting = false))
   .subscribe({
-      next: (res) => {this.router.navigateByUrl('/admin/users', { replaceUrl: true }),this.showAlert(res.message, 'success')},
+      next: (res) => {this.close(true),this.showAlert(res.message, 'success')},
       error: (err) => {
         if (err.status === 409 || err.status === 422) {
             this.showAlert(err.error.message, 'warning');
@@ -77,5 +77,7 @@ async showAlert(
         await modal.present();
       }
 
-
+close(refresh = false) {
+    this.modalCtrl.dismiss({ refresh });
+  }
 }

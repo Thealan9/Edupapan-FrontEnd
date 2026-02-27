@@ -1,20 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
 import { UsersPageRoutingModule } from './users-routing.module';
 
 import { UsersPage } from './users.page';
+import { EditComponent } from './components/edit/edit.component';
+import { CreateComponent } from './components/create/create.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    UsersPageRoutingModule
+    UsersPageRoutingModule,
+    ReactiveFormsModule
   ],
-  declarations: [UsersPage]
+  declarations: [UsersPage,EditComponent,CreateComponent]
 })
 export class UsersPageModule {}

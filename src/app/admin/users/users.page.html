@@ -6,7 +6,7 @@
     <p>Administración de accesos y permisos</p>
   </div>
 
-  <button routerLink="/admin/users/create" class="add-book-btn">
+  <button (click)="openCreate()" class="add-book-btn">
     <ion-icon name="person-add-outline"></ion-icon>
     <span>Nuevo Usuario</span>
   </button>
@@ -51,7 +51,7 @@
 
         <div class="md:col-span-5 flex justify-end gap-2">
           <button [disabled]="!canEdit(user)"
-                  [routerLink]="['/admin/users/edit', user.id]"
+                  (click)="openEdit(user.id)"
                   class="book-action-btn edit" title="Editar usuario">
             <ion-icon name="pencil-outline"></ion-icon>
           </button>

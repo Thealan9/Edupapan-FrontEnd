@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Editar usuario</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()"> Cerrar </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -28,7 +31,6 @@
         <ion-select-option value="user">Usuario</ion-select-option>
         <ion-select-option value="admin">Admin</ion-select-option>
         <ion-select-option value="warehouseman">Almacenista</ion-select-option>
-        <ion-select-option value="driver">Conductor</ion-select-option>
       </ion-select>
     </ion-item>
 
