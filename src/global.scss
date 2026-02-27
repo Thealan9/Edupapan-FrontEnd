@@ -84,9 +84,27 @@ ion-content {
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
 
-body {
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* Evita el scroll del navegador */
   margin: 0;
   font-family: Roboto, sans-serif;
+}
+
+#main-content {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Altura de la ventana */
+  overflow: hidden;
+}
+
+/* Forzamos a que el componente que inyecta el router ocupe el 100% del main */
+router-outlet + * {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
 }
 
 .snackbar-success .mdc-snackbar__surface {

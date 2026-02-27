@@ -90,7 +90,7 @@
       </ion-content>
     </ion-menu>
 
-    <div class="ion-page" id="main-content">
+    <div class="ion-page flex flex-col" id="main-content">
         <ion-header class="ion-no-border" *ngIf="isMobile$ | async">
             <ion-toolbar class="--background: #0f172a; border-b border-slate-800">
               <ion-buttons slot="start">
@@ -100,11 +100,9 @@
             </ion-toolbar>
           </ion-header>
 
-          <ion-content class="--background: #f8fafc;">
-            <main class="w-full h-full">
-              <router-outlet></router-outlet>
+            <main class="flex-1 overflow-hidden relative">
+                <router-outlet></router-outlet>
             </main>
-          </ion-content>
     </div>
 
   </ion-split-pane>
