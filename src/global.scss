@@ -18,9 +18,23 @@
   --edumex-text-title: #1e293b;
 }
 
-/* Aplicación global al contenido */
+/* Aplicación global al contenido sin scrool*/
 ion-content {
   --background: var(--edumex-bg-main);
+  --height: 100%;
+  --overflow: hidden;
+
+  &::part(scroll) {
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 
@@ -99,7 +113,6 @@ html, body {
   overflow: hidden;
 }
 
-/* Forzamos a que el componente que inyecta el router ocupe el 100% del main */
 router-outlet + * {
   display: flex;
   flex-direction: column;

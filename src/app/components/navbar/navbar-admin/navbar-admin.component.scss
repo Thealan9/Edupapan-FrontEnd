@@ -118,32 +118,30 @@ ion-header.ion-no-border::after { display: none; }
 
 .profile-popover {
   --width: 180px;
-  --background: #1e293b; // Fondo pizarra oscuro
+  --background: #1e293b;
   --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
 
   ion-content {
     --background: #1e293b;
-    --color: #ffffff; // Forzamos texto blanco global
+    --color: #ffffff;
   }
 
   .popover-item {
-    --background: #1e293b; // Fondo base igual al popover
-    --color: #ffffff !important; // Texto blanco siempre visible
+    --background: #1e293b;
+    --color: #ffffff !important;
     --padding-start: 12px;
     --border-radius: 8px;
     --inner-padding-end: 8px;
     margin: 4px;
     font-size: 0.9rem;
 
-    // Forzamos el color del label para que no sea negro
     ion-label {
       color: #ffffff !important;
       margin-left: 8px;
     }
 
-    // Estilo especial para la opción de cerrar sesión
     &.logout {
-      --color: #f87171 !important; // Rojo suave (Red 400)
+      --color: #f87171 !important;
       ion-label {
         color: #f87171 !important;
       }
@@ -154,10 +152,21 @@ ion-header.ion-no-border::after { display: none; }
     }
   }
 
-  // Quitamos líneas divisorias automáticas de Ionic que puedan ser oscuras
   ion-list {
     background: #1e293b !important;
     padding: 4px 0;
+  }
+}
+
+ion-menu {
+  ion-content {
+    --overflow: auto;
+
+    &::part(scroll) {
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
   }
 }
 
