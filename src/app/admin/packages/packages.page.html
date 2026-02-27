@@ -1,71 +1,63 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Paquetes</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="admin-toolbar">
+    <div class="page-header-container">
+      <div class="header-info">
+        <h1>Gestion de <span>Paquetes</span></h1>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-list *ngIf="!loading">
-    <ion-item *ngFor="let p of packages">
-      <ion-label>
-        <h2 style="font-weight: bold; text-transform: uppercase">
-          {{ p.batch_number }}
-        </h2>
-        <ion-row>
-          <ion-col>
-            <p>Libro: <ion-text color="dark">{{ p.book.title }}</ion-text></p>
-          </ion-col>
-          <ion-col>
-            <p>
-              Cantidad: <ion-text color="dark">{{ p.book_quantity }}</ion-text>
-            </p>
-          </ion-col>
-          <ion-col>
-            <p>
-              Pallet: <ion-text color="dark">{{ p.pallet.pallet_code }}</ion-text>
-            </p>
-          </ion-col>
-          <ion-col>
-            <p>
-              Status: <ion-text color="dark">{{ p.status }}</ion-text>
-            </p>
-          </ion-col>
-        </ion-row>
+<ion-content [fullscreen]="true" class="--background: #f8fafc;">
 
-        <!-- <div style="margin-top: 8px">
-           <ion-chip
-          *ngIf="p.status ==='empty'"
-            color="success"
-            outline="true"
-            style="font-size: 12px"
-          >
-            <ion-label>Vacío</ion-label>
-          </ion-chip>
-          <ion-chip
-          *ngIf="p.status ==='open'"
-            color="primary"
-            outline="true"
-            style="font-size: 12px"
-          >
-            <ion-label>Abierto</ion-label>
-          </ion-chip>
-           <ion-chip
-          *ngIf="p.status ==='full'"
-            color="warning"
-            outline="true"
-            style="font-size: 12px"
-          >
-            <ion-label>Lleno</ion-label>
-          </ion-chip>
-        </div> -->
-      </ion-label>
+  <div *ngIf="loading" class="flex flex-col items-center justify-center h-64 w-full">
+    <ion-spinner name="lines-sharp" color="primary"></ion-spinner>
+    <p class="text-slate-400 text-xs mt-2 uppercase tracking-widest font-bold animate-pulse">Cargando</p>
+  </div>
 
-      <ion-button *ngIf="p.status ==='available'" fill="outline" slot="end" (click)="openEdit(p.id)">
-        <ion-icon slot="start" name="create-outline"></ion-icon>
-        Editar
-      </ion-button>
-    </ion-item>
-  </ion-list>
+  <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-1">
 
-  <ion-spinner *ngIf="loading"></ion-spinner>
+    <div *ngFor="let p of packages" class="data-card group">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Lote</span>
+          <h2 class="text-lg font-black text-slate-800 tracking-tighter">{{ p.batch_number }}</h2>
+        </div>
+        <div [class]="'status-badge ' + p.status">
+          {{ p.status }}
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-slate-100 rounded-lg group-hover:bg-blue-50 transition-colors">
+            <ion-icon name="book-outline" class="text-slate-500 group-hover:text-blue-600"></ion-icon>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-[10px] text-slate-400 uppercase font-bold">Libro</p>
+            <p class="text-sm font-semibold text-slate-700 truncate">{{ p.book.title }}</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="data-field">
+            <p class="label">Cantidad</p>
+            <p class="value">{{ p.book_quantity }} uts.</p>
+          </div>
+          <div class="data-field">
+            <p class="label">Pallet</p>
+            <p class="value">#{{ p.pallet.pallet_code }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-4 border-t border-slate-100 flex justify-end">
+        <button (click)="openEdit(p.id)" class="action-btn-edit">
+          <ion-icon name="create-outline"></ion-icon>
+          <span>Gestionar</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
 </ion-content>
