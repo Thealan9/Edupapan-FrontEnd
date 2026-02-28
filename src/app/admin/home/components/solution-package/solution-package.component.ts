@@ -117,7 +117,7 @@ export class SolutionPackageComponent implements OnInit {
       this.Service.solutionOther(this.detailId, payload)
       .pipe(finalize(() => this.isSubmitting = false))
       .subscribe({
-        next: (res) => this.handleSuccess(res.message, 'success'),
+        next: (res) => {this.close(true); this.handleSuccess(res.message, 'success')},
         error: (err) => {
           if (err.status === 409 || err.status === 422) {
             this.handleSuccess(err.error.message, 'warning');
@@ -136,7 +136,7 @@ export class SolutionPackageComponent implements OnInit {
     });
   }
 
-  close() {
-    this.modalCtrl.dismiss();
+  close(refresh = false) {
+    this.modalCtrl.dismiss({ refresh });
   }
 }

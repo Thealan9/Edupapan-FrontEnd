@@ -53,7 +53,7 @@
         </div>
 
         <div class="mt-6 pt-4 border-t border-slate-100 flex justify-end">
-          <button (click)="openEdit(p.id)" class="action-btn-edit">
+          <button *ngIf="p.status ==='available'" (click)="openEdit(p.id)" class="action-btn-edit">
             <ion-icon name="create-outline"></ion-icon>
             <span>Gestionar</span>
           </button>

@@ -376,3 +376,66 @@ ion-spinner[name="lines-sharp"] {
 }
 
 .bg-red-500 { background-color: #ef4444 !important; }
+
+
+
+//componets
+/* --- ESTILOS DE FORMULARIO PREMIUM --- */
+
+.modal-toolbar {
+  --background: #ffffff;
+  --color: #1e293b;
+  padding: 8px 16px;
+
+  .modal-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    span { font-weight: 800; color: #3b82f6; }
+  }
+
+  .close-btn {
+    --color: #94a3b8;
+    --background-hover: #f1f5f9;
+    --border-radius: 50%;
+    font-size: 1.2rem;
+  }
+}
+
+.form-content {
+  --background: #f8fafc;
+}
+
+.form-label {
+  @apply block text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2 ml-1;
+}
+
+.input-wrapper {
+  @apply flex items-center bg-slate-50 border border-slate-200 rounded-xl px-4 py-1 transition-all focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10;
+
+  .input-icon { @apply text-slate-400 text-lg mr-3; }
+  .input-icon-text { @apply text-slate-400 font-bold mr-3; }
+
+  .custom-input {
+    --padding-start: 0;
+    --color: #1e293b;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .custom-select {
+    --padding-start: 0;
+    width: 100%;
+    font-weight: 600;
+    color: #1e293b;
+  }
+}
+
+.submit-modal-btn {
+  @apply flex items-center justify-center gap-3 w-full bg-blue-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-blue-500/30 transition-all hover:bg-blue-700 active:scale-[0.98];
+}
+.submit-modal-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+  box-shadow: none;
+}

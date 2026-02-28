@@ -1,35 +1,54 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      {{ isEdit ? 'Editar pallet' : 'Nuevo pallet' }}
+<ion-header class="ion-no-border">
+  <ion-toolbar class="modal-toolbar">
+    <ion-title class="modal-title">
+      {{ isEdit ? 'Editar' : 'Nuevo' }} <span>Pallet</span>
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="close()">Cerrar</ion-button>
+      <ion-button (click)="close()" class="close-btn">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <form [formGroup]="form">
+<ion-content class="form-content">
+  <div class="p-6 md:p-8">
+    <form [formGroup]="form" class="space-y-6">
 
-    <!-- CÓDIGO DEL PALLET -->
-    <ion-item>
-      <ion-label position="stacked">Código del pallet</ion-label>
-      <ion-input type="text" formControlName="pallet_code"></ion-input>
-    </ion-item>
-    <!-- UBICACIÓN EN ALMACÉN -->
-    <ion-item>
-      <ion-label position="stacked">Ubicación en almacén</ion-label>
-      <ion-input type="text" formControlName="warehouse_location"></ion-input>
-    </ion-item>
-    <!-- CAPACIDAD MAXIMA-->
-    <ion-item>
-      <ion-label position="stacked">Capacidad máxima de paquetes</ion-label>
-      <ion-input type="number" formControlName="max_packages_capacity"></ion-input>
-    </ion-item>
+      <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-5">
 
-    <ion-button expand="block" (click)="submit()">
-      Guardar
-    </ion-button>
-  </form>
+        <div class="form-group">
+          <label class="form-label">Código Identificador</label>
+          <div class="input-wrapper">
+            <ion-icon name="qr-code-outline" class="input-icon"></ion-icon>
+            <ion-input type="text" formControlName="pallet_code" placeholder="Ej: PLT-2024-001" class="custom-input"></ion-input>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Ubicación Técnica (Rack/Fila)</label>
+          <div class="input-wrapper">
+            <ion-icon name="location-outline" class="input-icon"></ion-icon>
+            <ion-input type="text" formControlName="warehouse_location" placeholder="Ej: Pasillo A - Estante 3" class="custom-input"></ion-input>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Capacidad Máxima (Paquetes)</label>
+          <div class="input-wrapper">
+            <ion-icon name="layers-outline" class="input-icon"></ion-icon>
+            <ion-input type="number" formControlName="max_packages_capacity" placeholder="Cantidad de bultos permitidos" class="custom-input"></ion-input>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-2 ml-1 italic">* Define el límite de paquetes que este pallet puede soportar físicamente.</p>
+        </div>
+
+      </div>
+
+      <button class="submit-modal-btn group" (click)="submit()">
+        <span>{{ isEdit ? 'Actualizar Registro' : 'Registrar Pallet' }}</span>
+        <ion-icon name="save-outline" class="group-hover:scale-110 transition-transform"></ion-icon>
+      </button>
+
+    </form>
+  </div>
 </ion-content>

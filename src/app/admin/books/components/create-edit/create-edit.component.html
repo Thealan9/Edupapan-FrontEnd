@@ -1,57 +1,79 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      {{ isEdit ? 'Editar libro' : 'Nuevo libro' }}
+<ion-header class="ion-no-border">
+  <ion-toolbar class="modal-toolbar">
+    <ion-title class="modal-title">
+      {{ isEdit ? 'Editar' : 'Nuevo' }} <span>Libro</span>
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="close()">Cerrar</ion-button>
+      <ion-button (click)="close()" class="close-btn">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <form [formGroup]="form">
-    <!-- AUTOR
-    <ion-item>
-      <ion-label position="stacked">Autor</ion-label>
-      <ion-input type="text" formControlName="author"></ion-input>
-    </ion-item> -->
+<ion-content class="form-content">
+  <div class="p-6 md:p-8">
+    <form [formGroup]="form" class="space-y-6">
 
-    <!-- TÍTULO -->
-    <ion-item>
-      <ion-label position="stacked">Título</ion-label>
-      <ion-input type="text" formControlName="title"></ion-input>
-    </ion-item>
-    <!-- ISBN -->
-    <ion-item>
-      <ion-label position="stacked">ISBN</ion-label>
-      <ion-input type="text" formControlName="isbn"></ion-input>
-    </ion-item>
-    <!-- NIVEL -->
-    <ion-item>
-      <ion-label position="stacked">Nivel</ion-label>
-      <ion-select formControlName="level">
-        <ion-select-option value="A1">A1</ion-select-option>
-        <ion-select-option value="A2">A2</ion-select-option>
-        <ion-select-option value="B1">B1</ion-select-option>
-        <ion-select-option value="B2">B2</ion-select-option>
-        <ion-select-option value="C1">C1</ion-select-option>
-        <ion-select-option value="C2">C2</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <!-- PRECIO -->
-    <ion-item>
-      <ion-label position="stacked">Precio</ion-label>
-      <ion-input type="number" formControlName="price"></ion-input>
-    </ion-item>
-    <!-- PROVEEDOR -->
-    <ion-item>
-      <ion-label position="stacked">Proveedor</ion-label>
-      <ion-input type="text" formControlName="supplier"></ion-input>
-    </ion-item>
+      <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-5">
 
-    <ion-button expand="block" (click)="submit()">
-      Guardar
-    </ion-button>
-  </form>
+        <div class="form-group">
+          <label class="form-label">Título del Libro</label>
+          <div class="input-wrapper">
+            <ion-icon name="book-outline" class="input-icon"></ion-icon>
+            <ion-input type="text" formControlName="title" placeholder="Ej: English File Elementary" class="custom-input"></ion-input>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="form-group">
+            <label class="form-label">ISBN</label>
+            <div class="input-wrapper">
+              <ion-icon name="barcode-outline" class="input-icon"></ion-icon>
+              <ion-input type="text" formControlName="isbn" placeholder="978-3-16..." class="custom-input"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nivel de Idioma</label>
+            <div class="input-wrapper">
+              <ion-icon name="ribbon-outline" class="input-icon"></ion-icon>
+              <ion-select formControlName="level" interface="popover" toggleIcon="chevron-down-outline" class="custom-select">
+                <ion-select-option value="A1">A1 - Principiante</ion-select-option>
+                <ion-select-option value="A2">A2 - Elemental</ion-select-option>
+                <ion-select-option value="B1">B1 - Intermedio</ion-select-option>
+                <ion-select-option value="B2">B2 - Intermedio Alto</ion-select-option>
+                <ion-select-option value="C1">C1 - Avanzado</ion-select-option>
+                <ion-select-option value="C2">C2 - Maestro</ion-select-option>
+              </ion-select>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="form-group">
+            <label class="form-label">Precio Unitario</label>
+            <div class="input-wrapper">
+              <span class="input-icon-text">$</span>
+              <ion-input type="number" formControlName="price" placeholder="0.00" class="custom-input"></ion-input>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Proveedor</label>
+            <div class="input-wrapper">
+              <ion-icon name="business-outline" class="input-icon"></ion-icon>
+              <ion-input type="text" formControlName="supplier" placeholder="Editorial..." class="custom-input"></ion-input>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="submit-modal-btn group" (click)="submit()">
+        <span>{{ isEdit ? 'Actualizar Ficha' : 'Registrar Libro' }}</span>
+        <ion-icon name="arrow-forward-outline" class="group-hover:translate-x-1 transition-transform"></ion-icon>
+      </button>
+
+    </form>
+  </div>
 </ion-content>

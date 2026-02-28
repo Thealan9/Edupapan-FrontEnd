@@ -1,197 +1,192 @@
-<ion-header>
-  <ion-toolbar color="tertiary">
-    <ion-title>Solución de Incidencia</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="modal-toolbar">
+    <ion-title class="modal-title">
+      Resolución de <span>Incidencia</span>
+    </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="close()">Cerrar</ion-button>
+      <ion-button (click)="close()" class="close-btn">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <div *ngIf="loading" class="ion-text-center">
-    <ion-spinner></ion-spinner>
+<ion-content class="form-content">
+  <div *ngIf="loading" class="flex flex-col items-center justify-center h-full w-full p-8">
+    <ion-spinner name="lines-sharp" color="primary"></ion-spinner>
+    <p class="text-slate-400 text-xs mt-4 uppercase tracking-widest font-bold animate-pulse">Analizando reporte...</p>
   </div>
 
-  <div *ngIf="!loading && response">
-    <ion-card color="light">
-      <ion-card-header>
-        <ion-card-subtitle
-          >Paquete: {{ response.package.batch_number }}</ion-card-subtitle
-        >
-        <ion-card-title
-          >Reportado como: {{ response.status | uppercase }}</ion-card-title
-        >
-      </ion-card-header>
-      <ion-card-content>
-        <strong>Descripción del reporte:</strong>
-        <p>{{ response.description }}</p>
-      </ion-card-content>
-    </ion-card>
+  <div class="p-6 md:p-8" *ngIf="!loading && response">
 
-    <ion-list>
-      <ion-list-header>¿Cómo desea proceder?</ion-list-header>
+    <div class="bg-slate-800 rounded-2xl p-6 mb-8 shadow-xl relative overflow-hidden">
+      <div class="relative z-10">
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">Expediente de Incidencia</span>
+          <div [class]="'status-badge ' + response.status">
+            {{ response.status | uppercase }}
+          </div>
+        </div>
+        <h2 class="text-white text-xl font-black tracking-tight mb-2 uppercase italic">Lote: {{ response.package.batch_number }}</h2>
+        <p class="text-slate-400 text-sm italic  ">
+          "{{ response.description }}"
+        </p>
+      </div>
+      <ion-icon name="alert-circle" class="absolute -right-4 -bottom-4 text-8xl text-white/5"></ion-icon>
+    </div>
 
-      <ng-container *ngIf="response.status === 'other'">
-        <ion-list lines="none">
-          <ion-list-header>Resolución Especial (Otro)</ion-list-header>
+    <div class="space-y-6">
+      <h3 class="text-slate-800 font-black text-xs uppercase tracking-widest ml-1 flex items-center gap-2">
+        <ion-icon name="options-outline" class="text-blue-600"></ion-icon>
+        Protocolo de resolución
+      </h3>
 
-          <ion-item
-            class="ion-margin-bottom"
-            style="border: 1px solid #ccc; border-radius: 8px"
-          >
-            <ion-label position="stacked">Seleccione Acción</ion-label>
-            <ion-select
-              [(ngModel)]="selectedAction"
-              placeholder="¿Qué desea hacer?"
-            >
-              <ion-select-option value="restore"
-                >Habilitar (Restaurar)</ion-select-option
-              >
-              <ion-select-option value="remove"
-                >Dar de baja (Generar Ticket)</ion-select-option
-              >
-              <ion-select-option value="update"
-                >Corregir datos del paquete</ion-select-option
-              >
-            </ion-select>
-          </ion-item>
-
-          <div *ngIf="selectedAction === 'restore'" class="ion-padding">
-            <ion-note color="success"
-              >El reporte se cancelará y el paquete volverá a estar
-              disponible.</ion-note
-            >
+      <div *ngIf="response.status === 'other'" class="animate-fade-in">
+        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-5">
+          <div class="form-group">
+            <label class="form-label">Acción Especial Sugerida</label>
+            <div class="input-wrapper min-h-[52px]">
+              <ion-icon name="flash-outline" class="input-icon"></ion-icon>
+              <ion-select [(ngModel)]="selectedAction" placeholder="Seleccione acción" interface="popover" class="custom-select">
+                <ion-select-option value="restore">Habilitar (Restaurar disponibilidad)</ion-select-option>
+                <ion-select-option value="remove">Dar de baja (Generar Ticket de retiro)</ion-select-option>
+                <ion-select-option value="update">Corregir datos del paquete</ion-select-option>
+              </ion-select>
+            </div>
           </div>
 
-          <div *ngIf="selectedAction === 'remove'">
-            <ion-item>
-              <ion-label position="stacked">Motivo</ion-label>
-              <ion-textarea
-                [(ngModel)]="otherDescription"
-                placeholder="Ej: Paquete vacío o error de sistema..."
-              ></ion-textarea>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Asignar a</ion-label>
-              <ion-select
-                [(ngModel)]="assignedTo"
-                placeholder="Seleccionar operario"
-              >
-                <ion-select-option
-                  *ngFor="let worker of workers"
-                  [value]="worker.id"
-                  >{{ worker.name }}</ion-select-option
-                >
-              </ion-select>
-            </ion-item>
+          <div *ngIf="selectedAction === 'restore'" class="bg-green-50 p-4 rounded-xl border border-green-100 flex items-center gap-3">
+            <ion-icon name="checkmark-circle" class="text-green-600 text-lg"></ion-icon>
+            <p class="text-green-700 text-[11px] font-bold uppercase italic">El reporte se cancelará y el stock se habilitará.</p>
           </div>
 
-          <div *ngIf="selectedAction === 'update'">
-            <ion-item>
-              <ion-label position="stacked">Número de Lote</ion-label>
-              <ion-input [(ngModel)]="updateData.batch_number"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Libro</ion-label>
-              <ion-select [(ngModel)]="updateData.book_id">
-                <ion-select-option
-                  *ngFor="let b of books"
-                  [value]="b.id"
-                >
-                  {{ b.title }}
-                </ion-select-option>
-              </ion-select>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Cantidad de Libros</ion-label>
-              <ion-input
-                type="number"
-                [(ngModel)]="updateData.book_quantity"
-              ></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="stacked">Pallet</ion-label>
-              <ion-select [(ngModel)]="updateData.pallet_id">
-                <ion-select-option
-                  *ngFor="let pallet of pallets"
-                  [value]="pallet.id"
-                >
-                  {{ pallet.pallet_code }}
-                </ion-select-option>
-              </ion-select>
-            </ion-item>
+          <div *ngIf="selectedAction === 'remove'" class="space-y-4 pt-2">
+            <div class="form-group">
+              <label class="form-label">Motivo Técnico de la Baja</label>
+              <div class="input-wrapper !items-start py-3">
+                <ion-textarea [(ngModel)]="otherDescription" placeholder="Describa el motivo del retiro..." rows="3" class="font-semibold text-sm"></ion-textarea>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Asignar Operario</label>
+              <div class="input-wrapper min-h-[52px]">
+                <ion-icon name="person-outline" class="input-icon"></ion-icon>
+                <ion-select [(ngModel)]="assignedTo" placeholder="Seleccionar encargado" class="custom-select">
+                  <ion-select-option *ngFor="let worker of workers" [value]="worker.id">{{ worker.name }}</ion-select-option>
+                </ion-select>
+              </div>
+            </div>
           </div>
-        </ion-list>
-      </ng-container>
 
-      <ion-item *ngIf="response.status !== 'other'">
-        <ion-label>Confirmar Incidencia</ion-label>
-        <ion-toggle [(ngModel)]="confirm" color="success"></ion-toggle>
-      </ion-item>
-
-      <div *ngIf="confirm">
-        <ng-container *ngIf="response.status === 'damaged'">
-          <ion-item>
-            <ion-label>¿Es daño parcial?</ion-label>
-            <ion-checkbox [(ngModel)]="isPartial" slot="end"></ion-checkbox>
-          </ion-item>
-
-          <ion-item>
-            <ion-label position="stacked"
-              >Asignar Operario para retiro</ion-label
-            >
-            <ion-select
-              [(ngModel)]="assignedTo"
-              placeholder="Seleccionar operario"
-            >
-              <ion-select-option
-                *ngFor="let worker of workers"
-                [value]="worker.id"
-              >
-                {{ worker.name }}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-note class="ion-padding" color="medium">
-            Se generará un ticket tipo "{{
-              isPartial ? "partial_damaged" : "damaged"
-            }}" para retirar el paquete.
-          </ion-note>
-        </ng-container>
-
-        <ng-container *ngIf="response.status === 'missing'">
-          <ion-note class="ion-padding" color="danger">
-            El paquete será marcado permanentemente como extraviado en el
-            inventario.
-          </ion-note>
-        </ng-container>
+          <div *ngIf="selectedAction === 'update'" class="space-y-4 pt-2">
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                  <label class="form-label">Nuevo Lote</label>
+                  <div class="input-wrapper min-h-[52px]"><ion-input [(ngModel)]="updateData.batch_number" class="custom-input"></ion-input></div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Cant. Libros</label>
+                  <div class="input-wrapper min-h-[52px]"><ion-input type="number" [(ngModel)]="updateData.book_quantity" class="custom-input"></ion-input></div>
+                </div>
+             </div>
+             <div class="form-group">
+                <label class="form-label">Libro Contenido</label>
+                <div class="input-wrapper min-h-[52px]">
+                  <ion-select [(ngModel)]="updateData.book_id" class="custom-select">
+                    <ion-select-option *ngFor="let b of books" [value]="b.id">{{ b.title }}</ion-select-option>
+                  </ion-select>
+                </div>
+             </div>
+             <div class="form-group">
+                <label class="form-label">Ubicación (Pallet)</label>
+                <div class="input-wrapper min-h-[52px]">
+                  <ion-select [(ngModel)]="updateData.pallet_id" class="custom-select">
+                    <ion-select-option *ngFor="let pallet of pallets" [value]="pallet.id">{{ pallet.pallet_code }}</ion-select-option>
+                  </ion-select>
+                </div>
+             </div>
+          </div>
+        </div>
       </div>
 
-      <div *ngIf="!confirm" class="ion-padding">
-        <ion-note color="success">
-          Si no confirma, el paquete volverá a estar
-          <strong>disponible</strong> y se cancelará el reporte.
-        </ion-note>
+      <div *ngIf="response.status !== 'other'" class="space-y-6">
+        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-6">
+
+          <div class="flex items-center justify-between p-4 rounded-xl border transition-all duration-300"
+               [class.bg-slate-50]="!confirm"
+               [class.border-slate-200]="!confirm"
+               [class.bg-green-50]="confirm"
+               [class.border-green-200]="confirm">
+            <div class="flex items-center gap-3">
+              <div class="p-2 rounded-lg" [class.bg-white]="!confirm" [class.bg-green-100]="confirm">
+                <ion-icon [name]="confirm ? 'shield-checkmark' : 'shield-outline'"
+                          [class]="confirm ? 'text-green-600' : 'text-slate-400'"
+                          class="text-xl transition-all"></ion-icon>
+              </div>
+              <div>
+                <span class="text-[10px] font-black uppercase tracking-widest block"
+                      [class]="confirm ? 'text-green-700' : 'text-slate-500'">Verificación</span>
+                <p class="text-[13px] font-bold text-slate-800 leading-none">Confirmar Incidencia</p>
+              </div>
+            </div>
+            <ion-toggle [(ngModel)]="confirm" mode="ios" color="success"></ion-toggle>
+          </div>
+
+          <div *ngIf="confirm" class="space-y-5 animate-fade-in pt-4 border-t border-slate-50">
+            <ng-container *ngIf="response.status === 'damaged'">
+              <div class="flex items-center justify-between bg-orange-50 p-4 rounded-xl border border-orange-100">
+                <div class="flex items-center gap-2">
+                  <ion-icon name="bandage-outline" class="text-orange-600"></ion-icon>
+                  <span class="text-xs font-black uppercase text-orange-700">¿Es daño parcial?</span>
+                </div>
+                <ion-checkbox [(ngModel)]="isPartial"></ion-checkbox>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Operario asignado para retiro</label>
+                <div class="input-wrapper min-h-[52px]">
+                  <ion-icon name="person-outline" class="input-icon"></ion-icon>
+                  <ion-select [(ngModel)]="assignedTo" placeholder="Seleccionar" class="custom-select">
+                    <ion-select-option *ngFor="let worker of workers" [value]="worker.id">{{ worker.name }}</ion-select-option>
+                  </ion-select>
+                </div>
+              </div>
+            </ng-container>
+
+            <div *ngIf="response.status === 'missing'" class="bg-red-50 p-4 rounded-xl border border-red-100 flex items-start gap-3">
+              <ion-icon name="alert-circle" class="text-red-500 text-xl"></ion-icon>
+              <p class="text-red-700 text-[11px] font-bold leading-relaxed uppercase italic">
+                El paquete será marcado permanentemente como extraviado en el inventario digital.
+              </p>
+            </div>
+          </div>
+
+          <div *ngIf="!confirm" class="bg-blue-50/50 p-4 rounded-xl border border-blue-100 flex items-center gap-3">
+            <ion-icon name="information-circle" class="text-blue-500 text-xl"></ion-icon>
+            <p class="text-blue-700 text-[11px] font-bold italic">
+              Al no confirmar, se asume error de reporte; el paquete volverá a estar <strong>DISPONIBLE</strong>.
+            </p>
+          </div>
+        </div>
       </div>
-    </ion-list>
+
+    </div>
   </div>
 </ion-content>
 
-<ion-footer *ngIf="!loading">
-  <ion-toolbar>
-    <ion-button
+<ion-footer *ngIf="!loading" class="ion-no-border bg-white p-6">
+    <button
+      class="submit-modal-btn group"
       expand="block"
       (click)="submit()"
       [disabled]="
-        (response?.status === 'damaged' && confirm && !assignedTo) ||
-        (response?.status === 'other' && !selectedAction) ||
-        (selectedAction === 'remove' && (!assignedTo || !otherDescription)) ||
+      (response?.status === 'damaged' && confirm && !assignedTo) ||
+      (response?.status === 'other' && !selectedAction) ||
+      (selectedAction === 'remove' && (!assignedTo || !otherDescription)) ||
         (selectedAction === 'update' &&
           (!updateData.batch_number || !updateData.book_id))
       "
     >
-      Ejecutar Acción
-    </ion-button>
-  </ion-toolbar>
+    <span>Ejecutar Acción</span>
+    <ion-icon name="play-outline" class="group-hover:translate-x-1 transition-transform"></ion-icon>
+      </button>
 </ion-footer>
