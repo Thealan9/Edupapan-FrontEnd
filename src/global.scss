@@ -160,17 +160,16 @@ router-outlet + * {
 
 
 //alert componet
-.small-alert-modal::part(content) {
-  --width: 300px;
-  --height: auto;
-  --border-radius: 20px;
-}
-
 .small-alert-modal {
-  --backdrop-opacity: 0.4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  --width: 280px !important;  /* Ancho ideal para una alerta pequeña */
+  --height: auto !important;
+  --max-height: 90%;
+  --border-radius: 24px;
+
+  &::part(content) {
+    border-radius: 24px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
 }
 
 
@@ -438,4 +437,16 @@ ion-spinner[name="lines-sharp"] {
   cursor: not-allowed;
   filter: grayscale(0.5);
   box-shadow: none;
+}
+
+.submit-modal-btn.btn-reject {
+  background-color: #ef4444; // Red 500
+  box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.2);
+  &:hover { background-color: #dc2626; }
+}
+
+.submit-modal-btn.btn-approve {
+  background-color: #10b981; // Emerald 500
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
+  &:hover { background-color: #059669; }
 }

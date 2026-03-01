@@ -81,9 +81,7 @@ export class HomePage implements OnInit{
     });
 
     modal.onDidDismiss().then(async (res) => {
-      if (res?.data) {
-        this.showAlert(res.data.message, res.data.type);
-      }
+
     });
 
     await modal.present();
@@ -98,9 +96,7 @@ export class HomePage implements OnInit{
     });
 
     modal.onDidDismiss().then(async (res) => {
-      if (res?.data) {
-        this.showAlert(res.data.message, res.data.type);
-      }
+
     });
 
     await modal.present();

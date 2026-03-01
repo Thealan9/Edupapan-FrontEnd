@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { finalize } from 'rxjs';
 import { AdminTickets } from 'src/app/admin/services/admin-tickets';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
 
 @Component({
   selector: 'app-request-partial',
@@ -47,12 +48,12 @@ export class RequestPartialComponent implements OnInit{
       this.Service.approvePartial(this.TicketId)
       .pipe(finalize(() => this.isSubmitting = false))
       .subscribe({
-        next: (res) => this.handleSuccess(res.message, 'success'),
+        next: (res) => this.showAlert(res.message, 'success'),
         error: (err) => {
           if (err.status === 409 || err.status === 422) {
-            this.handleSuccess(err.error.message, 'warning');
+            this.showAlert(err.error.message, 'warning');
           } else {
-            this.handleSuccess('Oops, ocurrió un error!', 'error');
+            this.showAlert('Oops, ocurrió un error!', 'error');
           }
         },
       });
@@ -64,23 +65,30 @@ export class RequestPartialComponent implements OnInit{
       this.Service.rejectPartial(this.TicketId)
       .pipe(finalize(() => this.isSubmitting = false))
       .subscribe({
-        next: (res) => {this.close(true); this.handleSuccess(res.message, 'success')},
+        next: (res) => {this.close(true); this.showAlert(res.message, 'success')},
         error: (err) => {
           if (err.status === 409 || err.status === 422) {
-            this.handleSuccess(err.error.message, 'warning');
+            this.showAlert(err.error.message, 'warning');
           } else {
-            this.handleSuccess('Oops, ocurrió un error!', 'error');
+            this.showAlert('Oops, ocurrió un error!', 'error');
           }
         },
       });
   }
 
-  async handleSuccess(message: string, color: string) {
-    await this.modalCtrl.dismiss({
-      message: message,
-      type: color,
-    });
-  }
+  async showAlert(
+          message: string,
+          type: 'success' | 'error' | 'warning'
+        ) {
+          const modal = await this.modalCtrl.create({
+            component: AlertComponent,
+            componentProps: { message, type },
+            cssClass: 'small-alert-modal',
+            backdropDismiss: false,
+          });
+
+          await modal.present();
+        }
   close(refresh = false) {
     this.modalCtrl.dismiss({ refresh });
   }

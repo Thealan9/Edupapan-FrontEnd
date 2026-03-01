@@ -1,64 +1,91 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Ticket #{{ TicketId }}</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="modal-toolbar">
+    <ion-title class="modal-title">
+      Solución para <span>Ticket #{{ TicketId }}</span>
+    </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="close()">
-        <ion-icon name="close"></ion-icon>
+      <ion-button (click)="close()" class="close-btn">
+        <ion-icon name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <div *ngIf="loading" class="ion-text-center ion-padding">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p>Cargando detalles...</p>
+<ion-content class="form-content">
+  <div *ngIf="loading" class="flex flex-col items-center justify-center h-full w-full p-8">
+    <ion-spinner name="lines-sharp" color="primary"></ion-spinner>
+    <p class="text-slate-400 text-xs mt-4 uppercase tracking-widest font-bold animate-pulse">Obteniendo detalles...</p>
   </div>
 
-  <div *ngIf="!loading && response">
+  <div class="p-6 md:p-8" *ngIf="!loading && response">
 
-    <ion-item lines="none">
-      <ion-label>
-        <ion-note color="dark">
-          Faltantes: <strong>{{ response.faltantes }}</strong> de {{ response.quantity }}
-        </ion-note>
-      </ion-label>
-    </ion-item>
+    <div class="bg-white rounded-2xl p-6 mb-8 border border-slate-100 shadow-sm relative overflow-hidden">
+      <div class="flex items-center gap-5 relative z-10">
+        <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-500 shadow-inner">
+          <ion-icon name="alert-circle" class="text-3xl"></ion-icon>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-2xl font-black text-slate-800 leading-none">
+            Faltantes <span class="text-red-600">{{ response.faltantes }}</span>
+          </h2>
+          <p class="text-xs text-slate-500 mt-2 font-medium">Paquetes necesarios: {{ response.quantity }}</p>
+        </div>
+      </div>
+      <div class="absolute -right-6 -top-6 w-24 h-24 bg-slate-50 rounded-full"></div>
+    </div>
 
-    <h3>Paquetes Reportados</h3>
+    <div class="flex items-center justify-between mb-4 px-1">
+      <h3 class="text-slate-800 font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-2">
+        Paquetes con Incidencia
+      </h3>
+      <span class="bg-slate-200 text-slate-600 text-[9px] font-black px-2 py-1 rounded-md uppercase">
+        {{ response.details?.length }}
+      </span>
+    </div>
 
-    <ion-card *ngFor="let detail of response.details">
-      <ion-item lines="full">
-        <ion-icon name="cube-outline" slot="start" color="primary"></ion-icon>
-        <ion-label>
-          <h2>Lote: {{ detail.package.batch_number }}</h2>
-          <p>ID Paquete: {{ detail.package_id }}</p>
-        </ion-label>
-        <ion-badge [color]="detail.status === 'damaged' ? 'danger' : 'warning'" slot="end">
-          {{ detail.status }}
-        </ion-badge>
-      </ion-item>
+    <div class="space-y-4">
+      <div *ngFor="let detail of response.details" class="book-row group !border-slate-100">
+        <div class="book-spine"
+             [class.bg-red-500]="detail.status === 'damaged'"
+             [class.bg-orange-500]="detail.status !== 'damaged'">
+        </div>
 
-      <ion-card-content>
-        <p><strong>Motivo:</strong> {{ detail.description || 'No especificado' }}</p>
-      </ion-card-content>
-    </ion-card>
+        <div class="flex-1 p-5">
+          <div class="flex justify-between items-start gap-4">
+            <div class="min-w-0">
+              <h2 class="text-sm font-black text-slate-800 uppercase tracking-tight truncate group-hover:text-blue-600 transition-colors">
+                Lote: {{ detail.package.batch_number }}
+              </h2>
+            </div>
+            <div [class]="detail.status === 'damaged' ? 'status-badge error' : 'status-badge pending'">
+              {{ detail.status }}
+            </div>
+          </div>
+
+          <div class="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-100/50 group-hover:bg-white transition-colors">
+            <p class="text-[11px] text-slate-600 font-medium leading-relaxed italic">
+              <span class="text-slate-400 not-italic font-black text-[9px] uppercase block mb-1 tracking-tighter">Observaciones:</span>
+              {{ detail.description || 'Sin comentarios adicionales en el reporte.' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </ion-content>
 
-<ion-footer *ngIf="!loading">
-  <ion-toolbar>
-    <ion-row>
-      <ion-col>
-        <ion-button expand="block" color="danger" fill="outline" (click)="reject()">
-          Rechazar
-        </ion-button>
-      </ion-col>
-      <ion-col>
-        <ion-button expand="block" color="success" (click)="accept()">
-          Aprobar Parcial
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-toolbar>
+<ion-footer *ngIf="!loading" class="ion-no-border bg-white p-6 border-t border-slate-100">
+  <div class="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+
+    <button (click)="reject()" class="submit-modal-btn btn-reject group">
+      <ion-icon name="close-circle-outline"></ion-icon>
+      <span>Rechazar</span>
+    </button>
+
+    <button (click)="accept()" class="submit-modal-btn btn-approve group">
+      <span>Aprobar Parcial</span>
+      <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+    </button>
+
+  </div>
 </ion-footer>
