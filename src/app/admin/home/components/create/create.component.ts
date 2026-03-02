@@ -24,7 +24,7 @@ export class CreateComponent implements OnInit {
   form = this.fb.group({
     type: ['', Validators.required],
     assigned_to: ['', [Validators.required]],
-    book_id: [0, [Validators.required]],
+    book_id: [0],
     quantity: [0, [Validators.required, Validators.min(1)]],
     description: [''],
     packages: this.fb.array([]),
@@ -44,8 +44,8 @@ export class CreateComponent implements OnInit {
     });
 
     this.form.get('book_id')?.valueChanges.subscribe(() => {
-      this.clearPackageSelections();
-    });
+    this.clearPackageSelections();
+});
 
     this.form.get('quantity')?.valueChanges.subscribe((val) => {
       if (val !== null && val >= 0) {
@@ -147,6 +147,9 @@ export class CreateComponent implements OnInit {
     const type = this.form.get('type')?.value;
     const packageGroup = this.fb.group({});
 
+    if (type === 'sale') {
+      packageGroup.addControl('book_id', this.fb.control('', Validators.required));
+    }
     if (type === 'entry') {
       packageGroup.addControl(
         'batch_number',
@@ -174,11 +177,9 @@ export class CreateComponent implements OnInit {
       }
     }
 
-    this.packages.push(packageGroup);
+    this.packages.insert(0, packageGroup);
   }
-  getFilteredPackages() {
-    const bookId = this.form.get('book_id')?.value;
-    //return bookId ? this.packagesData[bookId] || [] : [];
+  getFilteredPackages(bookId: any): any[] {
     if (!bookId || bookId === 0) return [];
     return this.packagesData[bookId] || [];
   }
@@ -194,6 +195,16 @@ export class CreateComponent implements OnInit {
   }
   removePackage(index: number) {
     this.packages.removeAt(index);
+  }
+
+  removeSpecificPackage(index: number) {
+    const currentQuantity = this.form.get('quantity')?.value || 0;
+
+    this.packages.removeAt(index);
+
+    if (currentQuantity > 0) {
+      this.form.get('quantity')?.setValue(currentQuantity - 1, { emitEvent: false });
+    }
   }
 
   managePackages() {
@@ -222,6 +233,12 @@ export class CreateComponent implements OnInit {
 
     const data = this.form.getRawValue();
     const type = data.type;
+    if (data.type !== 'sale') {
+      data.packages = data.packages.map((p: any) => ({
+        ...p,
+        book_id: data.book_id
+      }));
+    }
     if (type === 'entry') {
       this.Service.createEntry(data)
       .pipe(finalize(() => this.isSubmitting = false))
@@ -302,4 +319,9 @@ export class CreateComponent implements OnInit {
   close(refresh = false) {
     this.modalCtrl.dismiss({ refresh });
   }
+  onBookChange(index: number) {
+  const pkg = this.packages.at(index);
+  pkg.get('package_id')?.setValue('');
+  pkg.get('moved_to_pallet')?.setValue('');
+}
 }
