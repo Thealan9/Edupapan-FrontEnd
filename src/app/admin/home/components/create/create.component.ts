@@ -101,6 +101,11 @@ export class CreateComponent implements OnInit {
     return pallet ? pallet.remaining_capacity <= 0 : false;
   }
 
+  hasPackages(bookId: any): boolean {
+  if (!bookId || bookId === 0) return false;
+  return (this.packagesData?.[bookId]?.length ?? 0) > 0;
+  }
+
   generatePackageForms(count: any) {
     const total = Number(count);
     if (isNaN(total) || total < 0) return;
