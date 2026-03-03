@@ -184,6 +184,21 @@ export class CreateComponent implements OnInit {
 
     this.packages.insert(0, packageGroup);
   }
+
+  increaseQuantity() {
+    const current = this.form.get('quantity')?.value || 1;
+    this.form.get('quantity')?.setValue(current + 1);
+  }
+
+  decreaseQuantity() {
+    const current = this.form.get('quantity')?.value || 1;
+    if (current > 1) {
+      this.form.get('quantity')?.setValue(current - 1);
+    }
+  }
+  get quantityValue(): number {
+    return this.form.get('quantity')?.value ?? 1;
+  }
   getFilteredPackages(bookId: any): any[] {
     if (!bookId || bookId === 0) return [];
     return this.packagesData[bookId] || [];
