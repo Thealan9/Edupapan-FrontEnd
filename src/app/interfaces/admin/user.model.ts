@@ -3,6 +3,7 @@ import { UserRole } from "./role.type";
 export interface User {
   id: number;
   name: string;
+  last_name: string;
   email: string;
   role: UserRole;
   active: boolean;

@@ -19,6 +19,7 @@ export class CreateComponent  implements OnInit {
 
   form = this.fb.group({
   name: ['', Validators.required],
+  last_name: ['', Validators.required],
   password: ['', Validators.required],
   active: [true],
   email: ['', [Validators.required, Validators.email]],
