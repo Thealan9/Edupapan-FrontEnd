@@ -19,11 +19,20 @@ export class CreateEditComponent  implements OnInit {
   isSubmitting = false;
 
   form = this.fb.group({
-    title: ['',[Validators.required,Validators.maxLength(255)],],
-    isbn: ['',[Validators.required, Validators.minLength(13),Validators.maxLength(13)],],
-    level: ['',[Validators.required],],
-    price: [0,[Validators.required, Validators.min(0)],],
-    supplier: ['',[Validators.required,Validators.maxLength(255)],],
+    title: ['', [Validators.required, Validators.maxLength(255)]],
+    isbn: ['', [Validators.required, Validators.minLength(13), Validators.maxLength(13)]],
+    level: ['', [Validators.required]],
+    price: [0, [Validators.required, Validators.min(0)]],
+    quantity: [1, [Validators.required, Validators.min(1)]], // Estándar por paquete
+    description: ['', [Validators.required]],
+    autor: ['', [Validators.required, Validators.maxLength(255)]],
+    active: [false],
+    pages: [1, [Validators.required, Validators.min(1)]],
+    year: [new Date().getFullYear(), [Validators.required, Validators.min(1900)]],
+    edition: [1, [Validators.required, Validators.min(1)]],
+    format: ['Tapa Blanda', [Validators.required]],
+    size: ['', [Validators.required, Validators.maxLength(50)]],
+    supplier: ['', [Validators.required, Validators.maxLength(255)]],
   });
 
   constructor(

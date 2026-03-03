@@ -4,5 +4,14 @@ export interface Book {
   isbn: string;
   level: string;
   price: number;
+  quantity: number;
+  description: string;
+  autor: string;
+  active: boolean;
+  pages: number;
+  year: number;
+  edition: number;
+  format: 'Bolsillo' | 'Tapa Blanda' | 'Tapa Dura';
+  size: string;
   supplier: string;
 }
