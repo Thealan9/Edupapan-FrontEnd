@@ -49,7 +49,9 @@ export class LoginPage {
         next: (res) => {
           if (res.user.role === 'admin') {
             this.router.navigateByUrl('/admin', { replaceUrl: true });
-          } else {
+          }else if(res.user.role === 'warehouseman'){
+              this.router.navigateByUrl('/warehouseman', { replaceUrl: true });
+            } else if(res.user.role === 'user'){
             this.router.navigateByUrl('/home', { replaceUrl: true });
           }
         },

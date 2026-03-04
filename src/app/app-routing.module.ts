@@ -22,12 +22,6 @@ const routes: Routes = [
   data: { roles: ['user'] },
   loadChildren: () => import('./user/home/home.module').then(m => m.HomePageModule)
   },
-  {
-    path: 'detail',
-    canMatch: [AuthGuard,RoleGuard],
-    data: { roles: ['user'] },
-    loadChildren: () => import('./user/detail/detail.module').then( m => m.DetailPageModule)
-  },
 
 
 
