@@ -67,7 +67,15 @@ const routes: Routes = [
       loadChildren: () =>
         import('./admin/pallets/pallets.module')
           .then(m => m.PalletsPageModule)
-    }
+    },
+    {
+    path: 'profile',
+    resolve: {
+    user: UserResolver
+    },
+    loadChildren: () =>
+      import('./admin/profile/profile.module').then( m => m.ProfilePageModule)
+  },
   ]
 },
 
@@ -120,16 +128,6 @@ const routes: Routes = [
 
 
 
-  //---------------------Compartidas------------------------------------------
-  {
-    path: 'profile',
-    canMatch: [AuthGuard,RoleGuard],
-    data: { roles: ['user','admin'] },
-    resolve: {
-    user: UserResolver
-    },
-    loadChildren: () => import('./user/profile/profile.module').then( m => m.ProfilePageModule)
-  },
 
 
 

@@ -20,17 +20,15 @@ export class CreateComponent  implements OnInit {
   form = this.fb.group({
   name: ['', Validators.required],
   last_name: ['', Validators.required],
-  password: ['', Validators.required],
+  password: ['', [Validators.required, Validators.minLength(8)]],
   active: [true],
   email: ['', [Validators.required, Validators.email]],
-  role: ['user', Validators.required],
+  role: ['warehouseman', Validators.required],
 });
 
 constructor(
-    private route: ActivatedRoute,
     private fb: FormBuilder,
     private userService: AdminUsers,
-    private router: Router,
     private modalCtrl: ModalController,
 
   ) {}

@@ -36,6 +36,10 @@ export class AdminUsers {
     );
   }
 
+  updatePassword(id: number, data: Partial<any>) {
+    return this.http.put<any>(`${this.API}/admin/users/${id}/change-password`,data);
+  }
+
   triggerRefresh(){
     this._refresh.next();
   }
