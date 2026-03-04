@@ -160,10 +160,7 @@ export class CreateComponent implements OnInit {
         'batch_number',
         this.fb.control('', Validators.required),
       );
-      packageGroup.addControl(
-        'book_quantity',
-        this.fb.control(20, [Validators.required, Validators.min(20)]),
-      );
+
       packageGroup.addControl(
         'moved_to_pallet',
         this.fb.control('', Validators.required),

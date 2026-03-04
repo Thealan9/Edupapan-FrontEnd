@@ -59,7 +59,7 @@
             <label class="form-label">Cantidad de Paquetes</label>
             <div class="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl p-2 h-[56px]">
               <button type="button" (click)="decreaseQuantity()" [disabled]="quantityValue <= 1" class="w-10 h-10 bg-white rounded-lg shadow-sm text-blue-600 disabled:opacity-30">-</button>
-              <span class="text-lg font-black text-slate-800">{{ form.get('quantity')?.value }} bultos</span>
+              <span class="text-lg font-black text-slate-800">{{ form.get('quantity')?.value }}</span>
               <button type="button" (click)="increaseQuantity()" class="w-10 h-10 bg-white rounded-lg shadow-sm text-blue-600">+</button>
             </div>
           </div>
@@ -77,9 +77,13 @@
             </div>
 
             <ng-container *ngIf="form.get('type')?.value === 'entry'">
-              <div class="grid grid-cols-2 gap-3">
-                <div class="form-group"><label class="form-label">Lote</label><div class="input-wrapper"><ion-input formControlName="batch_number" class="custom-input"></ion-input></div></div>
-                <div class="form-group"><label class="form-label">Cant. Libros</label><div class="input-wrapper"><ion-input type="number" formControlName="book_quantity" class="custom-input"></ion-input></div></div>
+              <div class="space-y-3"> <div class="form-group">
+                  <label class="form-label">Lote</label>
+                  <div class="input-wrapper">
+                    <ion-icon name="barcode-outline" class="input-icon"></ion-icon>
+                    <ion-input formControlName="batch_number" placeholder="Ingrese el número de lote" class="custom-input"></ion-input>
+                  </div>
+                </div>
               </div>
             </ng-container>
 
