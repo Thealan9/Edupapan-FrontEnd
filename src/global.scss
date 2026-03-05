@@ -450,3 +450,132 @@ ion-spinner[name="lines-sharp"] {
   box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
   &:hover { background-color: #059669; }
 }
+
+.type-icon-container {
+  @apply w-10 h-10 rounded-xl flex items-center justify-center text-xl;
+
+  &.sale {
+    @apply bg-blue-50 text-blue-600;
+  }
+
+  &.entry {
+    @apply bg-indigo-50 text-indigo-600;
+  }
+}
+
+.action-btn-success {
+  @apply flex items-center gap-2 bg-green-50 text-green-600 px-4 py-2 rounded-xl text-[11px] font-black uppercase transition-all active:scale-95 border border-green-100;
+
+  &:hover {
+    @apply bg-green-100;
+  }
+}
+.action-btn-edit {
+  @apply active:scale-95 transition-transform;
+}
+
+/* Alineación del Spinner personalizado */
+ion-spinner[name="lines-sharp"] {
+  width: 50px;
+  height: 50px;
+}
+
+/* Espaciado para tablets/desktop */
+@media (min-width: 768px) {
+  .data-card {
+    padding: 2rem;
+  }
+}
+
+
+.edumex-action-sheet {
+  --background: #ffffff;
+
+  .action-sheet-title {
+    color: #64748b !important; /* slate-500 */
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    font-size: 11px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+  }
+
+  .action-sheet-button {
+    color: #1e293b !important; /* slate-800 */
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+  }
+
+  /* Estilo para el texto de botones seleccionados o de énfasis */
+  .action-sheet-button-inner {
+    justify-content: center !important;
+  }
+}
+
+/* 2. Alert Personalizado (General y con Inputs) */
+.edumex-alert {
+  --background: #ffffff;
+  --max-width: 320px;
+
+  .alert-wrapper {
+    border-radius: 24px !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .alert-title {
+    font-weight: 900 !important;
+    color: #1e293b !important;
+    text-transform: uppercase !important;
+    letter-spacing: -0.025em !important;
+    font-size: 1.1rem !important;
+  }
+
+  .alert-sub-title {
+    font-weight: 600 !important;
+    color: #49505b !important; /* slate-400 */
+    font-size: 0.85rem !important;
+  }
+
+  .alert-message {
+    color: #475569 !important; /* slate-600 */
+    font-size: 0.9rem !important;
+  }
+
+  /* Estilo de los Inputs dentro del Alert */
+  .alert-input-group {
+    margin-top: 10px !important;
+
+    .alert-input {
+      background-color: #f8fafc !important; /* slate-50 */
+      border: 1px solid #e2e8f0 !important; /* slate-200 */
+      border-radius: 12px !important;
+      color: #1e293b !important;
+      font-weight: 600 !important;
+      margin-bottom: 8px !important;
+      padding: 12px !important;
+    }
+  }
+
+  /* Botones del Alert */
+  .alert-button-group {
+    padding: 8px !important;
+  }
+
+  .alert-button {
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    font-size: 11px !important;
+
+    /* Botón de confirmar/aceptar suele ser el último */
+    &:last-child {
+      color: #3b82f6 !important;
+    }
+
+    /* Botón de cancelar */
+    span.alert-button-inner {
+      justify-content: center !important;
+    }
+  }
+}
